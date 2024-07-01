@@ -7,7 +7,7 @@ class Producto implements JsonSerializable {
     private $_id;
     private $_precio;
     private $_tipo;
-    private $_idSector;
+    private $_idSector; // 1: Tragos y Vinos, 2: Choperas, 3: Cocina, 4: Candy Bar
     private $_fechaBaja;
 
     function __construct(){

@@ -8,9 +8,9 @@ class Usuario implements JsonSerializable {
     private $_id;
     private $_nombre;
     private $_clave;
-    private $_idRol;
+    private $_idRol;  // 1: Bartender, 2: Cervecero, 3: Cocinero, 4: Mozo, 5: Socio
     private $_fechaBaja;
-    private $_estadoUsuario;
+    private $_estadoUsuario; // 1: Activo, 2: Inactivo
 
     function __construct(){
         $params = func_get_args();

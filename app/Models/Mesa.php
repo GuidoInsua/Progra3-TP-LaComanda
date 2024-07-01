@@ -6,7 +6,7 @@ class Mesa implements JsonSerializable {
 
     private $_id;
     private $_codigo;
-    private $_estadoMesa;
+    private $_estadoMesa; // 1: Esperando Pedido, 2: Comiendo, 3: Pagando, 4: Cerrada
 
     function __construct(){
         $params = func_get_args();

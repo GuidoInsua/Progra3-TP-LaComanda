@@ -8,7 +8,7 @@ class Pedido implements JsonSerializable {
     private $_codigo;
     private $_nombreCliente;
     private $_idMesa;
-    private $_estadoPedido;
+    private $_estadoPedido; // 1: Pendiente, 2: En Preparacion, 3: Listo Para Servir
     private $_tiempoEstimado;
     private $_fechaBaja;
     private $_precioFinal;
