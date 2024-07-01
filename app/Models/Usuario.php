@@ -1,5 +1,8 @@
 <?php
 
+require_once 'Enums/EstadoUsuarioEnum.php';
+require_once 'Enums/RolEnum.php';
+
 class Usuario implements JsonSerializable {
 
     private $_id;
@@ -7,7 +10,7 @@ class Usuario implements JsonSerializable {
     private $_clave;
     private $_idRol;
     private $_fechaBaja;
-    private $_estado;
+    private $_estadoUsuario;
 
     function __construct(){
         $params = func_get_args();
@@ -27,15 +30,15 @@ class Usuario implements JsonSerializable {
         $this->_clave = $data['clave'];
         $this->_idRol = $data['idRol'];
         $this->_fechaBaja = $data['fechaBaja'];
-        $this->_estado = $data['estado'];
+        $this->_estadoUsuario = $data['estadoUsuario'];
     }
 
-    public function __construct5($nombre, $clave, $idRol, $fechaBaja, $estado) {
+    public function __construct5($nombre, $clave, $idRol, $fechaBaja, $estadoUsuario) {
         $this->_nombre = $nombre;
         $this->_clave = $clave;
         $this->_idRol = $idRol;
         $this->_fechaBaja = $fechaBaja;
-        $this->_estado = $estado;
+        $this->_estadoUsuario = $estadoUsuario;
     }
 
     public function jsonSerialize(): mixed {
@@ -45,7 +48,7 @@ class Usuario implements JsonSerializable {
             'clave' => $this->_clave,
             'idRol' => $this->_idRol,
             'fechaBaja' => $this->_fechaBaja,
-            'estado' => $this->_estado
+            'estadoUsuario' => $this->_estadoUsuario
         ];
     }
 
@@ -54,9 +57,9 @@ class Usuario implements JsonSerializable {
         " - ID: " . $this->_id . "<br>" .
         " - Nombre: " . $this->_nombre . "<br>" .
         " - Clave: " . $this->_clave . "<br>" .
-        " - ID Rol: " . $this->_idRol . "<br>" .
+        " - Rol: " . RolEnum::fromId($this->_idRol)?->getNombre() . "<br>" .
         " - Fecha Baja: " . $this->_fechaBaja . "<br>" .
-        " - Estado: " . $this->_estado . "<br> -------------------- <br>";
+        " - Estado: " . EstadoUsuarioEnum::fromId($this->_estadoUsuario)?->getNombre() . "<br> -------------------- <br>";
     }
 
     public function getId() {
@@ -99,12 +102,12 @@ class Usuario implements JsonSerializable {
         $this->_fechaBaja = $fechaBaja;
     }
 
-    public function getEstado() {
-        return $this->_estado;
+    public function getEstadoUsuario() {
+        return $this->_estadoUsuario;
     }
 
-    public function setEstado($estado) {
-        $this->_estado = $estado;
+    public function setEstado($estadoUsuario) {
+        $this->_estadoUsuario = $estadoUsuario;
     }
 
 }

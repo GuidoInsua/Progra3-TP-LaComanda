@@ -1,12 +1,6 @@
 <?php
 
-/*
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    precio DECIMAL(10, 2) NOT NULL,
-    tipo VARCHAR(100) NOT NULL,
-    idSector INT NOT NULL,
-    fechaBaja DATE,
-*/
+require_once 'Enums/SectorEnum.php';
 
 class Producto implements JsonSerializable {
 
@@ -58,7 +52,7 @@ class Producto implements JsonSerializable {
         " - ID: " . $this->_id . "<br>" .
         " - Precio: " . $this->_precio . "<br>" .
         " - Tipo: " . $this->_tipo . "<br>" .
-        " - ID Sector: " . $this->_idSector . "<br>" .
+        " - Sector: " . SectorEnum::fromId($this->_idSector)?->getNombre() . "<br>" .
         " - Fecha Baja: " . $this->_fechaBaja . "<br> -------------------- <br>";
     }
 

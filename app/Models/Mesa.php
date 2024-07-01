@@ -1,16 +1,12 @@
 <?php
 
-/*
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    codigo VARCHAR(5) NOT NULL UNIQUE,
-    estado VARCHAR(50) NOT NULL
-*/
+require_once 'Enums/EstadoMesaEnum.php';
 
 class Mesa implements JsonSerializable {
 
     private $_id;
     private $_codigo;
-    private $_estado;
+    private $_estadoMesa;
 
     function __construct(){
         $params = func_get_args();
@@ -27,19 +23,19 @@ class Mesa implements JsonSerializable {
     public function __construct1(array $data) {
         $this->_id = $data['id'];
         $this->_codigo = $data['codigo'];
-        $this->_estado = $data['estado'];
+        $this->_estadoMesa = $data['estadoMesa'];
     }
 
-    public function __construct2($codigo, $estado) {
+    public function __construct2($codigo, $estadoMesa) {
         $this->_codigo = $codigo;
-        $this->_estado = $estado;
+        $this->_estadoMesa = $estadoMesa;
     }
 
     public function jsonSerialize(): mixed {
         return [
             'id' => $this->_id,
             'codigo' => $this->_codigo,
-            'estado' => $this->_estado
+            'estadoMesa' => $this->_estadoMesa
         ];
     }
 
@@ -47,7 +43,7 @@ class Mesa implements JsonSerializable {
         echo 
         " - ID: " . $this->_id . "<br>" .
         " - Codigo: " . $this->_codigo . "<br>" .
-        " - Estado: " . $this->_estado . "<br> -------------------- <br>";
+        " - Estado: " . EstadoMesaEnum::fromId($this->_estadoMesa)?->getNombre() . "<br> -------------------- <br>";
     }
 
     public function getId() {
@@ -58,8 +54,8 @@ class Mesa implements JsonSerializable {
         return $this->_codigo;
     }
 
-    public function getEstado() {
-        return $this->_estado;
+    public function getEstadoMesa() {
+        return $this->_estadoMesa;
     }
 
     public function setId($id) {
@@ -70,8 +66,8 @@ class Mesa implements JsonSerializable {
         $this->_codigo = $codigo;
     }
 
-    public function setEstado($estado) {
-        $this->_estado = $estado;
+    public function setEstadoMesa($estado) {
+        $this->_estadoMesa = $estado;
     }
 
 }
