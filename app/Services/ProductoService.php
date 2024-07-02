@@ -7,13 +7,14 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 class ProductoService extends AService {
 
+    //obtiene tipo, sector y precio
     public function altaProducto($parametros) {
         try {
-            $producto = new Producto($parametros);
-            $productoExistente = $this->verificarProductoExistente($producto->getTipo(), $producto->getIdSector());
+            $productoExistente = $this->obtenerProductoPorTipo($parametros);
             if ($productoExistente) {
                 $mensaje = "El producto ya existe";
             } else {
+                $producto = new Producto($parametros);
                 $this->registrarNuevoProducto($producto);
                 $mensaje = "Producto dado de alta exitosamente";
             }
@@ -40,57 +41,12 @@ class ProductoService extends AService {
         }
     }
 
-    public function obtenerUnProducto($parametros): ?Producto {
+    public function obtenerProductoPorTipo($parametros): ?Producto {
         try {
-            $productoExistente = $this->verificarProductoExistente($parametros['tipo'], $parametros['idSector']);
+            $tipo = $parametros['tipo'];
 
-            return $productoExistente;
-        } catch (Exception $e) {
-            throw new RuntimeException("Error al obtener el producto: " . $e->getMessage());
-        }
-    }
-
-    public function modificarProducto($parametros) {
-        try {
-            $productoExistente = $this->verificarProductoExistente($parametros['tipo'], $parametros['idSector']);
-
-            if ($productoExistente) {
-                $this->actualizarPrecioProducto($parametros);
-                $mensaje = "Producto actualizado exitosamente, paso de precio " . $productoExistente['precio'] . " a " . $parametros['precio'];
-            } else {
-                $mensaje = "El producto no existe";
-            }
-
-            return $mensaje;
-        } catch (Exception $e) {
-            throw new RuntimeException("Error al modificar el producto: " . $e->getMessage());
-        }
-    }
-
-    public function bajaProducto($parametros) {
-        try {
-            $productoExistente = $this->verificarProductoExistente($parametros['tipo'], $parametros['idSector']);
-
-            if ($productoExistente) {
-                $fecha = date('Y-m-d');
-                $parametros['fechaBaja'] = $fecha;
-                $this->actualizarFechaBajaProducto($parametros);
-                $mensaje = "Producto dado de baja exitosamente";
-            } else {
-                $mensaje = "El producto no existe";
-            }
-
-            return $mensaje;
-        } catch (Exception $e) {
-            throw new RuntimeException("Error al dar de baja el producto: " . $e->getMessage());
-        }
-    }
-
-    private function verificarProductoExistente($tipo, $idSector) {
-        try {
-            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM producto WHERE tipo = :tipo AND idSector = :idSector");
-            $consulta->bindParam(':tipo', $tipo, PDO::PARAM_STR);
-            $consulta->bindParam(':idSector', $idSector, PDO::PARAM_INT);
+            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM producto WHERE tipo = :tipo");
+            $consulta->bindParam(':tipo', $tipo, PDO::PARAM_INT);
             $consulta->execute();
             $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
 
@@ -100,7 +56,7 @@ class ProductoService extends AService {
                 return null;
             }
         } catch (Exception $e) {
-            throw new RuntimeException("Error al verificar la existencia del producto: " . $e->getMessage());
+            throw new RuntimeException("Error al obtener el producto: " . $e->getMessage());
         }
     }
 
@@ -117,7 +73,42 @@ class ProductoService extends AService {
                 return null;
             }
         } catch (Exception $e) {
-            throw new RuntimeException("Error al verificar la existencia del producto: " . $e->getMessage());
+            throw new RuntimeException("Error al obtener el producto: " . $e->getMessage());
+        }
+    }
+
+    public function modificarProducto($parametros) {
+        try {
+            $productoExistente = $this->obtenerProductoPorTipo($parametros['tipo']);
+
+            if ($productoExistente) {
+                $this->actualizarPrecioProducto($productoExistente);
+                $mensaje = "Producto actualizado exitosamente";
+            } else {
+                $mensaje = "El producto no existe";
+            }
+
+            return $mensaje;
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al modificar el producto: " . $e->getMessage());
+        }
+    }
+
+    public function bajaProducto($parametros) {
+        try {
+            $productoExistente = $this->obtenerProductoPorTipo($parametros['tipo']);
+
+            if ($productoExistente) {
+                $fechaBaja = date('Y-m-d');
+                $this->actualizarFechaBajaProducto($productoExistente, $fechaBaja);
+                $mensaje = "Producto dado de baja exitosamente";
+            } else {
+                $mensaje = "El producto no existe";
+            }
+
+            return $mensaje;
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al dar de baja el producto: " . $e->getMessage());
         }
     }
 
@@ -138,33 +129,27 @@ class ProductoService extends AService {
        }
     }
 
-    private function actualizarPrecioProducto($parametros) {
+    private function actualizarPrecioProducto($producto) {
         try {
+            $id = $producto->getId();
+            $precio = $producto->getPrecio();
 
-            $precio = $parametros['precio'];
-            $tipo = $parametros['tipo'];
-            $idSector = $parametros['idSector'];
-
-            $consulta = $this->accesoDatos->prepararConsulta("UPDATE producto SET precio = :precio WHERE tipo = :tipo AND idSector = :idSector");
+            $consulta = $this->accesoDatos->prepararConsulta("UPDATE producto SET precio = :precio WHERE id = :id");
+            $consulta->bindParam(':id', $id, PDO::PARAM_INT);
             $consulta->bindParam(':precio', $precio, PDO::PARAM_STR);
-            $consulta->bindParam(':tipo', $tipo, PDO::PARAM_STR);
-            $consulta->bindParam(':idSector', $idSector, PDO::PARAM_INT);
             $consulta->execute();
         } catch (Exception $e) {
             throw new RuntimeException("Error al actualizar el precio del producto: " . $e->getMessage());
         }
     }
 
-    private function actualizarFechaBajaProducto($parametros) {
+    private function actualizarFechaBajaProducto($productoExistente, $fechaBaja) {
         try {
-            $fechaBaja = $parametros['fechaBaja'];
-            $tipo = $parametros['tipo'];
-            $idSector = $parametros['idSector'];
+            $id = $productoExistente->getId();
 
-            $consulta = $this->accesoDatos->prepararConsulta("UPDATE producto SET fechaBaja = :fechaBaja WHERE tipo = :tipo AND idSector = :idSector");
+            $consulta = $this->accesoDatos->prepararConsulta("UPDATE producto SET fechaBaja = :fechaBaja WHERE id = :id");
+            $consulta->bindParam(':id', $id, PDO::PARAM_INT);
             $consulta->bindParam(':fechaBaja', $fechaBaja, PDO::PARAM_STR);
-            $consulta->bindParam(':tipo', $tipo, PDO::PARAM_STR);
-            $consulta->bindParam(':idSector', $idSector, PDO::PARAM_INT);
             $consulta->execute();
         } catch (Exception $e) {
             throw new RuntimeException("Error al actualizar la fecha de baja del producto: " . $e->getMessage());

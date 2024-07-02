@@ -16,7 +16,6 @@ class MesaController extends AController implements IController {
     public function add($request, $response, $args)
     {
         try {
-
             $data = $request->getParsedBody();
 
             $mensajeRespuesta = $this->miMesaService->altaMesa($data);
@@ -59,10 +58,9 @@ class MesaController extends AController implements IController {
     public function get($request, $response, $args)
     {
         try {
-
             $data = $request->getParsedBody();
 
-            $mesa = $this->miMesaService->obtenerUnaMesa($data);
+            $mesa = $this->miMesaService->obtenerMesaPorCodigo($data);
 
             if ($mesa != null) {
                 $mesa->imprimirMesa();
@@ -102,7 +100,6 @@ class MesaController extends AController implements IController {
     public function delete($request, $response, $args)
     {
         try {
-
             $data = $request->getParsedBody();
 
             $mensajeRespuesta = $this->miMesaService->bajaMesa($data);

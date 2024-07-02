@@ -10,12 +10,12 @@ class MesaService extends AService {
 
     public function altaMesa($parametros) {
         try {
-            $mesa = new Mesa($parametros);
-            $mesaExistente = $this->verificarMesaExistente($mesa->getCodigo());
+            $mesaExistente = $this->obtenerMesaPorCodigo($parametros);
 
             if ($mesaExistente) {
                 $mensaje = "La mesa ya existe";
             } else {
+                $mesa = new Mesa($parametros);
                 $this->registrarNuevaMesa($mesa);
                 $mensaje = "Mesa dada de alta exitosamente";
             }
@@ -44,11 +44,20 @@ class MesaService extends AService {
         }
     }
 
-    public function obtenerUnaMesa($parametros): ?Mesa {
+    public function obtenerMesaPorCodigo($parametros): ?Mesa {
         try {
-            $mesaExistente = $this->verificarMesaExistente($parametros['codigo']);
+            $codigo = $parametros['codigo'];
 
-            return $mesaExistente;
+            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM mesa WHERE codigo = :codigo");
+            $consulta->bindParam(':codigo', $codigo, PDO::PARAM_STR);
+            $consulta->execute();
+            $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+
+            if ($resultado) {
+                return new Producto($resultado);
+            } else {
+                return null;
+            }
         } catch (Exception $e) {
             throw new RuntimeException("Error al obtener la mesa: " . $e->getMessage());
         }
@@ -56,7 +65,7 @@ class MesaService extends AService {
 
     public function modificarMesa($parametros) {
         try {
-            $mesaExistente = $this->verificarMesaExistente($parametros['codigo']);
+            $mesaExistente = $this->obtenerMesaPorCodigo($parametros);
 
             if ($mesaExistente) {
                 $this->actualizarEstadoMesa($parametros);
@@ -73,7 +82,7 @@ class MesaService extends AService {
 
     public function bajaMesa($parametros) {
         try {
-            $mesaExistente = $this->verificarMesaExistente($parametros['codigo']);
+            $mesaExistente = $this->obtenerMesaPorCodigo($parametros);
 
             if ($mesaExistente) {
                 $parametros['estadoMesa'] = EstadoMesaEnum::Baja->value;
@@ -89,20 +98,8 @@ class MesaService extends AService {
         }
     }
 
-    private function verificarMesaExistente($codigo) {
+    public function registrarNuevaMesa($mesa) {
         try {
-            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM mesa WHERE codigo = :codigo");
-            $consulta->bindParam(':codigo', $codigo, PDO::PARAM_STR);
-            $consulta->execute();
-            return $consulta->fetch(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
-            throw new RuntimeException("Error al verificar la mesa: " . $e->getMessage());
-        }
-    }
-
-    private function registrarNuevaMesa($mesa) {
-        try {
-
             $codigo = $mesa->getCodigo();
             $estadoMesa = $mesa->getEstadoMesa();
 
@@ -118,9 +115,8 @@ class MesaService extends AService {
         }
     }
 
-    private function actualizarEstadoMesa($parametros) {
+    public function actualizarEstadoMesa($parametros) {
         try {
-
             $estadoMesa = $parametros['estadoMesa'];
             $codigo = $parametros['codigo'];
 

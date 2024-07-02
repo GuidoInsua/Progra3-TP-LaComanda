@@ -60,7 +60,7 @@ class ProductoController extends AController implements IController {
         try {
             $data = $request->getQueryParams();
 
-            $producto = $this->miProductoService->obtenerUnProducto($data);
+            $producto = $this->miProductoService->obtenerProductoPorTipo($data);
 
             if ($producto != null) {
                 $producto->imprimirProducto();

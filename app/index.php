@@ -56,6 +56,11 @@ try {
       $group->post('/alta', PedidoController::class . ':add')->add(new MValidarPedido("nombreCliente", "idMesa"));
       $group->put('/modificar', PedidoController::class . ':update')->add(new MValidarPedido("codigo"));
       $group->put('/baja', PedidoController::class . ':delete')->add(new MValidarPedido("codigo"));
+      //------------------------------------------------------------------------
+      $group->group('/ordenes', function (RouteCollectorProxy $group) {
+        $group->post('/Pendientes', PedidoController::class . ':Pendientes');
+        $group->post('/TiempoEstimado', PedidoController::class . ':TiempoEstimado');
+      });
     });
 
     $app->group('/producto', function (RouteCollectorProxy $group) {

@@ -12,20 +12,20 @@ class PedidoService extends AService {
 
     public function altaPedido($parametros) {
         try {
-            $datosPedido = [
-                'nombreCliente' => $parametros['nombreCliente'],
-                'idMesa' => $parametros['idMesa'],
-            ];
-
-            $productos = $parametros['productos'];
-    
-            $pedido = new Pedido($datosPedido);
-
-            $pedidoExistente = $this->verificarPedidoExistente($pedido->getCodigo());
+            $pedidoExistente = $this->obtenerPedidoBasePorCodigo($parametros['codigo']);
 
             if ($pedidoExistente) {
                 $mensaje = "El pedido ya existe";
             } else {
+                $datosPedido = [
+                    'nombreCliente' => $parametros['nombreCliente'],
+                    'idMesa' => $parametros['idMesa'],
+                ];
+    
+                $productos = $parametros['productos'];
+        
+                $pedido = new Pedido($datosPedido);
+
                 $this->GenerarDatosBasicosPedido($pedido);
                 $idPedido = $this->registrarNuevoPedido($pedido);
                 $this->altaRelacionPedidoProducto($idPedido, $productos);
@@ -43,8 +43,6 @@ class PedidoService extends AService {
             $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM pedido");
             $consulta->execute();
             $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
-
-            $pedidos = [];
 
             foreach ($resultados as $fila) {
                 $pedido = new Pedido($fila);
@@ -66,7 +64,13 @@ class PedidoService extends AService {
 
     public function obtenerUnPedido($parametros): ?Pedido {
         try {
-            $pedidoExistente = $this->verificarPedidoExistente($parametros['codigo']);
+            $pedidoExistente = $this->obtenerPedidoBasePorCodigo($parametros['codigo']);
+
+            $productos = $this->obtenerProductosDelPedido($pedidoExistente->getId());
+
+            foreach ($productos as $producto) {
+                $pedidoExistente->addProducto($producto);
+            }
 
             return $pedidoExistente;
         } catch (Exception $e) {
@@ -76,7 +80,7 @@ class PedidoService extends AService {
 
     public function modificarPedido($parametros) {
         try {
-            $pedidoExistente = $this->verificarPedidoExistente($parametros['codigo']);
+            $pedidoExistente = $this->obtenerPedidoBasePorCodigo($parametros['codigo']);
 
             if ($pedidoExistente) {
                 $this->actualizarEstadoPedido($parametros);
@@ -93,7 +97,7 @@ class PedidoService extends AService {
 
     public function bajaPedido($parametros) {
         try {
-            $pedidoExistente = $this->verificarPedidoExistente($parametros['codigo']);
+            $pedidoExistente = $this->obtenerPedidoBasePorCodigo($parametros['codigo']);
 
             if ($pedidoExistente) {
                 $parametros['estadoPedido'] = EstadoPedidoEnum::Cancelado->value;    
@@ -110,7 +114,7 @@ class PedidoService extends AService {
         }
     }
 
-    private function verificarPedidoExistente($codigo) {
+    private function obtenerPedidoBasePorCodigo($codigo) {
         try {
             $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM pedido WHERE codigo = :codigo");
             $consulta->bindParam(':codigo', $codigo, PDO::PARAM_STR);
@@ -129,7 +133,6 @@ class PedidoService extends AService {
 
     private function registrarNuevoPedido($pedido) {
         try {
-
             $codigo = $pedido->getCodigo();
             $nombreCliente = $pedido->getNombreCliente();
             $idMesa = $pedido->getIdMesa();
@@ -159,7 +162,7 @@ class PedidoService extends AService {
             do {
                 // Generar una cadena hexadecimal de 10 caracteres
                 $codigoUnico = substr(bin2hex(random_bytes(5)), 0, 10);
-            } while ($this->verificarPedidoExistente($codigoUnico));
+            } while ($this->obtenerPedidoBasePorCodigo($codigoUnico));
     
             $fecha = date('Y-m-d H:i:s');
     
@@ -174,7 +177,7 @@ class PedidoService extends AService {
         try {
             $miProductoService = new ProductoService();
             foreach ($productos as $producto) {
-                if($nuevoProducto = $miProductoService->obtenerUnProducto($producto)) {
+                if($nuevoProducto = $miProductoService->obtenerProductoPorTipo($producto)) {
 
                     $idProducto = $nuevoProducto->getId();
                     $estadoRelacion = EstadoPedidoEnum::Pendiente->value;  

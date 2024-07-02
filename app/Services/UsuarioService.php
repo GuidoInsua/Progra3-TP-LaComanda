@@ -10,11 +10,11 @@ class UsuarioService extends AService {
 
     public function altaUsuario($parametros) {
         try {
-            $usuario = new Usuario($parametros);
-            $usuarioExistente = $this->verificarUsuarioExistente($usuario->getNombre());
+            $usuarioExistente = $this->obtenerUsuarioPorNombre($parametros);
             if ($usuarioExistente) {
                 $mensaje = "El usuario ya existe";
             } else {
+                $usuario = new Usuario($parametros);
                 $this->registrarNuevoUsuario($usuario);
                 $mensaje = "Usuario dado de alta exitosamente";
             }
@@ -41,19 +41,28 @@ class UsuarioService extends AService {
         }
     }
 
-    public function obtenerUnUsuario($parametros): ?Usuario {
+    public function obtenerUsuarioPorNombre($parametros): ?Usuario {
         try {
-            $usuarioExistente = $this->verificarUsuarioExistente($parametros['nombre']);
+            $nombre = $parametros['nombre'];
 
-            return $usuarioExistente;
+            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM usuario WHERE nombre = :nombre");
+            $consulta->bindParam(':nombre', $nombre, PDO::PARAM_STR);
+            $consulta->execute();
+            $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+
+            if ($resultado) {
+                return new Usuario($resultado);
+            } else {
+                return null;
+            }
         } catch (Exception $e) {
-            throw new RuntimeException("Error al obtener el usuario: " . $e->getMessage());
+            throw new RuntimeException("Error al obtener usuario: " . $e->getMessage());
         }
     }
 
     public function modificarUsuario($parametros) {
         try {
-            $usuarioExistente = $this->verificarUsuarioExistente($parametros['nombre']);
+            $usuarioExistente = $this->obtenerUsuarioPorNombre($parametros);
 
             if ($usuarioExistente) {
                 $this->actualizarEstado($parametros);
@@ -71,7 +80,7 @@ class UsuarioService extends AService {
 
     public function bajaUsuario($parametros) {
         try {
-            $usuarioExistente = $this->verificarUsuarioExistente($parametros['nombre']);
+            $usuarioExistente = $this->obtenerUsuarioPorNombre($parametros);
 
             if ($usuarioExistente) {
                 $parametros['estadoUsuario'] = EstadoUsuarioEnum::Inactivo->value;
@@ -84,23 +93,6 @@ class UsuarioService extends AService {
             return $mensaje;
         } catch (Exception $e) {
             throw new RuntimeException("Error al dar de baja el usuario: " . $e->getMessage());
-        }
-    }
-
-    private function verificarUsuarioExistente($nombre) {
-        try {
-            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM usuario WHERE nombre = :nombre");
-            $consulta->bindParam(':nombre', $nombre, PDO::PARAM_STR);
-            $consulta->execute();
-            $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
-
-            if ($resultado) {
-                return new Usuario($resultado);
-            } else {
-                return null;
-            }
-        } catch (Exception $e) {
-            throw new RuntimeException("Error al verificar la existencia del usuario: " . $e->getMessage());
         }
     }
 
@@ -131,7 +123,6 @@ class UsuarioService extends AService {
 
     private function actualizarEstado($parametros) {
         try {
-
             $estadoUsuario = $parametros['estadoUsuario'];
             $nombre = $parametros['nombre'];
 
@@ -146,7 +137,6 @@ class UsuarioService extends AService {
 
     private function actualizarRol($parametros) {
         try {
-
             $idRol = $parametros['idRol'];
             $nombre = $parametros['nombre'];
 
