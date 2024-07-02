@@ -2,6 +2,7 @@
 
 require_once 'Models/Mesa.php';
 require_once 'Services/AService.php';
+require_once 'Enums/EstadoMesaEnum.php';
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
@@ -75,7 +76,7 @@ class MesaService extends AService {
             $mesaExistente = $this->verificarMesaExistente($parametros['codigo']);
 
             if ($mesaExistente) {
-                $parametros['estadoMesa'] = 5;
+                $parametros['estadoMesa'] = EstadoMesaEnum::Baja->value;
                 $this->actualizarEstadoMesa($parametros);
                 $mensaje = "Mesa eliminada exitosamente";
             } else {

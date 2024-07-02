@@ -23,6 +23,7 @@ require_once './Controllers/UsuarioController.php';
 require_once './Middlewares/MValidarMesa.php';
 require_once './Middlewares/MValidarPedido.php';
 require_once './Middlewares/MValidarProducto.php';
+require_once './Middlewares/MValidarUsuario.php';
 
 try {
     // Load ENV
@@ -64,10 +65,10 @@ try {
 
     $app->group('/usuario', function (RouteCollectorProxy $group) {
       $group->get('/obtenerTodos', UsuarioController::class . ':getAll');
-      $group->post('/obtenerUno', UsuarioController::class . ':get');
-      $group->post('/alta', UsuarioController::class . ':add');
-      $group->put('/modificar', UsuarioController::class . ':update');
-      $group->put('/baja', UsuarioController::class . ':delete');
+      $group->post('/obtenerUno', UsuarioController::class . ':get')->add(new MValidarUsuario("nombre"));
+      $group->post('/alta', UsuarioController::class . ':add')->add(new MValidarUsuario("nombre"));
+      $group->put('/modificar', UsuarioController::class . ':update')->add(new MValidarUsuario("nombre"));
+      $group->put('/baja', UsuarioController::class . ':delete')->add(new MValidarUsuario("nombre"));
     });
 
     $app->run();

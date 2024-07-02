@@ -16,7 +16,6 @@ class ProductoController extends AController implements IController {
     public function add($request, $response, $args)
     {
         try {
-
             $data = $request->getParsedBody();
 
             $mensajeRespuesta = $this->miProductoService->altaProducto($data);

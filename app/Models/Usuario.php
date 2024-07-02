@@ -10,6 +10,7 @@ class Usuario implements JsonSerializable {
     private $_clave;
     private $_idRol;  // 1: Bartender, 2: Cervecero, 3: Cocinero, 4: Mozo, 5: Socio
     private $_fechaBaja;
+    private $_fechaAlta;
     private $_estadoUsuario; // 1: Activo, 2: Inactivo
 
     function __construct(){
@@ -25,20 +26,13 @@ class Usuario implements JsonSerializable {
     }
 
     public function __construct1(array $data) {
-        $this->_id = $data['id'];
+        $this->_id = empty($data['id']) ? null : $data['id'];
         $this->_nombre = $data['nombre'];
         $this->_clave = $data['clave'];
         $this->_idRol = $data['idRol'];
-        $this->_fechaBaja = $data['fechaBaja'];
-        $this->_estadoUsuario = $data['estadoUsuario'];
-    }
-
-    public function __construct5($nombre, $clave, $idRol, $fechaBaja, $estadoUsuario) {
-        $this->_nombre = $nombre;
-        $this->_clave = $clave;
-        $this->_idRol = $idRol;
-        $this->_fechaBaja = $fechaBaja;
-        $this->_estadoUsuario = $estadoUsuario;
+        $this->_fechaBaja = empty($data['fechaBaja']) ? null : $data['fechaBaja'];
+        $this->_fechaAlta = empty($data['fechaAlta']) ? null : $data['fechaAlta'];
+        $this->_estadoUsuario = empty($data['estadoUsuario']) ? EstadoUsuarioEnum::Activo->value : $data['estadoUsuario'];
     }
 
     public function jsonSerialize(): mixed {
@@ -48,6 +42,7 @@ class Usuario implements JsonSerializable {
             'clave' => $this->_clave,
             'idRol' => $this->_idRol,
             'fechaBaja' => $this->_fechaBaja,
+            'fechaAlta' => $this->_fechaAlta,
             'estadoUsuario' => $this->_estadoUsuario
         ];
     }
@@ -59,6 +54,7 @@ class Usuario implements JsonSerializable {
         " - Clave: " . $this->_clave . "<br>" .
         " - Rol: " . RolEnum::fromId($this->_idRol)?->getNombre() . "<br>" .
         " - Fecha Baja: " . $this->_fechaBaja . "<br>" .
+        " - Fecha Alta: " . $this->_fechaAlta . "<br>" .
         " - Estado: " . EstadoUsuarioEnum::fromId($this->_estadoUsuario)?->getNombre() . "<br> -------------------- <br>";
     }
 
@@ -100,6 +96,14 @@ class Usuario implements JsonSerializable {
 
     public function setFechaBaja($fechaBaja) {
         $this->_fechaBaja = $fechaBaja;
+    }
+
+    public function getFechaAlta() {
+        return $this->_fechaAlta;
+    }
+
+    public function setFechaAlta($fechaAlta) {
+        $this->_fechaAlta = $fechaAlta;
     }
 
     public function getEstadoUsuario() {

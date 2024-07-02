@@ -72,7 +72,7 @@ class ProductoService extends AService {
             $productoExistente = $this->verificarProductoExistente($parametros['tipo'], $parametros['idSector']);
 
             if ($productoExistente) {
-                $fecha = date('Y-m-d H:i:s');
+                $fecha = date('Y-m-d');
                 $parametros['fechaBaja'] = $fecha;
                 $this->actualizarFechaBajaProducto($parametros);
                 $mensaje = "Producto dado de baja exitosamente";
@@ -86,7 +86,7 @@ class ProductoService extends AService {
         }
     }
 
-    private function verificarProductoExistente($tipo, $idSector): ?Producto {
+    private function verificarProductoExistente($tipo, $idSector) {
         try {
             $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM producto WHERE tipo = :tipo AND idSector = :idSector");
             $consulta->bindValue(':tipo', $tipo, PDO::PARAM_STR);

@@ -2,6 +2,7 @@
 
 require_once 'Models/Pedido.php';
 require_once 'Services/AService.php';
+require_once 'Enums/EstadoPedidoEnum.php';
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
@@ -76,8 +77,9 @@ class PedidoService extends AService {
             $pedidoExistente = $this->verificarPedidoExistente($parametros['codigo']);
 
             if ($pedidoExistente) {
-                $parametros['estadoPedido'] = 4;    
-                $this->actualizarEstadoPedido($parametros);
+                $parametros['estadoPedido'] = EstadoPedidoEnum::Cancelado->value;    
+                $parametros['fechaBaja'] = date('Y-m-d'); 
+                $this->darDeBajaPedido($parametros);
                 $mensaje = "Pedido dado de baja exitosamente";
             } else {
                 $mensaje = "El pedido no existe";
@@ -89,7 +91,7 @@ class PedidoService extends AService {
         }
     }
 
-    private function verificarPedidoExistente($codigo): ?Pedido {
+    private function verificarPedidoExistente($codigo) {
         try {
             $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM pedido WHERE codigo = :codigo");
             $consulta->bindValue(':codigo', $codigo, PDO::PARAM_STR);
@@ -147,6 +149,18 @@ class PedidoService extends AService {
             $actualizacion->execute();
         } catch (Exception $e) {
             throw new RuntimeException("Error al actualizar el estado del pedido: " . $e->getMessage());
+        }
+    }
+
+    private function darDeBajaPedido($parametros) {
+        try {
+            $actualizacion = $this->accesoDatos->prepararConsulta("UPDATE pedido SET estadoPedido = :estadoPedido, fechaBaja = :fechaBaja WHERE codigo = :codigo");
+            $actualizacion->bindValue(':estadoPedido', $parametros['estadoPedido'], PDO::PARAM_INT);
+            $actualizacion->bindValue(':fechaBaja', $parametros['fechaBaja'], PDO::PARAM_STR);
+            $actualizacion->bindValue(':codigo', $parametros['codigo'], PDO::PARAM_STR);
+            $actualizacion->execute();
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al dar de baja el pedido: " . $e->getMessage());
         }
     }
 }
