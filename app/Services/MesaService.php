@@ -104,12 +104,14 @@ class MesaService extends AService {
         try {
 
             $codigo = $mesa->getCodigo();
+            $estadoMesa = $mesa->getEstadoMesa();
 
             $consultaInsert = $this->accesoDatos->prepararConsulta("
-                INSERT INTO mesa (codigo) 
-                VALUES (:codigo)
+                INSERT INTO mesa (codigo, estadoMesa) 
+                VALUES (:codigo, :estadoMesa)
             ");
             $consultaInsert->bindParam(':codigo', $codigo, PDO::PARAM_STR);
+            $consultaInsert->bindParam(':estadoMesa', $estadoMesa, PDO::PARAM_INT);
             $consultaInsert->execute();
         } catch (Exception $e) {
             throw new RuntimeException("Error al registar la mesa: " . $e->getMessage());

@@ -1,0 +1,134 @@
+{
+	"info": {
+		"_postman_id": "ec16cd54-4e0d-4fcc-bec8-19c2eef9e5a3",
+		"name": "LaComanda",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30176648"
+	},
+	"item": [
+		{
+			"name": "Consultas",
+			"item": []
+		},
+		{
+			"name": "Altas",
+			"item": [
+				{
+					"name": "AltaUsuario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nombre",
+									"value": "juan",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "1435",
+									"type": "text"
+								},
+								{
+									"key": "idRol",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/usuario/alta",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"usuario",
+								"alta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AltaProducto",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "tipo",
+									"value": "torta",
+									"type": "text"
+								},
+								{
+									"key": "idSector",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "precio",
+									"value": "2000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/producto/alta",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"producto",
+								"alta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AltaMesa",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost:666/app/mesa/alta",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"mesa",
+								"alta"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bajas",
+			"item": []
+		},
+		{
+			"name": "Modificaciones",
+			"item": []
+		}
+	]
+}
