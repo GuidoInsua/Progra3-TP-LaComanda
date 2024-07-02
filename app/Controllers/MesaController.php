@@ -35,13 +35,8 @@ class MesaController extends AController implements IController {
         try {
             $mesas = $this->miMesaService->obtenerTodasLasMesas();
 
-            if ($mesas != null && count($mesas) > 0) {
-
-                foreach ($mesas as $mesa) {
-                    $mesa->imprimirMesa();
-                }
-    
-                $contenido = json_encode(array("mensaje"=>"Consulta exitosa, se encontraron " . count($mesas) . " mesas"));
+            if ($mesas != null && count($mesas) > 0) {  
+                $contenido = json_encode(array("Mesas"=>$mesas));
             }
             else {
                 $contenido = json_encode(array("mensaje"=>"No se encontraron mesas"));
@@ -63,9 +58,7 @@ class MesaController extends AController implements IController {
             $mesa = $this->miMesaService->obtenerMesaPorCodigo($data);
 
             if ($mesa != null) {
-                $mesa->imprimirMesa();
-    
-                $contenido = json_encode(array("mensaje"=>"Consulta exitosa"));
+                $contenido = json_encode(array("Mesa"=>$mesa));
             }
             else {
                 $contenido = json_encode(array("mensaje"=>"No se encontro la mesa"));

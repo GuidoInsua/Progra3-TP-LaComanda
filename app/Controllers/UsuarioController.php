@@ -36,12 +36,7 @@ class UsuarioController extends AController implements IController {
             $usuarios = $this->miUsuarioService->obtenerTodosLosUsuarios();
 
             if ($usuarios != null && count($usuarios) > 0) {
-
-                foreach ($usuarios as $usuario) {
-                    $usuario->imprimirUsuario();
-                }
-    
-                $contenido = json_encode(array("mensaje"=>"Consulta exitosa, se encontraron " . count($usuarios) . " usuarios"));
+                $contenido = json_encode(array("Usuarios"=>$usuarios));
             }
             else {
                 $contenido = json_encode(array("mensaje"=>"No se encontraron usuarios"));
@@ -60,11 +55,10 @@ class UsuarioController extends AController implements IController {
         try {
             $data = $request->getParsedBody();
 
-            $usuario = $this->miUsuarioService->obtenerUnUsuario($data);
+            $usuario = $this->miUsuarioService->obtenerUsuarioPorNombre($data);
 
             if ($usuario != null) {
-                $usuario->imprimirUsuario();
-                $contenido = json_encode(array("mensaje"=>"Consulta exitosa"));
+                $contenido = json_encode(array("Usuario"=>$usuario));
             }
             else {
                 $contenido = json_encode(array("mensaje"=>"No se encontro el usuario"));

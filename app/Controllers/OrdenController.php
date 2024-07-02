@@ -18,12 +18,8 @@ class OrdenController extends AController{
             $data = $request->getParsedBody();
 
             $ordenes = $this->miOrdenService->obtenerTodasLasOrdenes();
-
-            foreach ($ordenes as $orden) {
-                $orden->imprimirOrden();
-            }
-
-            $contenido = json_encode(array("mensaje"=>"Se encontraron " . count($ordenes) . " ordenes"));
+            
+            $contenido = json_encode(array("Ordenes"=>$ordenes));
             return $this->setResponse($response, $contenido);
         } catch (Exception $e) {
             $contenido = json_encode(array("mensaje"=>"Error " . $e->getMessage()));
@@ -37,11 +33,7 @@ class OrdenController extends AController{
 
             $ordenes = $this->miOrdenService->obtenerOrdenesPorEstado($data);
 
-            foreach ($ordenes as $orden) {
-                $orden->imprimirOrden();
-            }
-
-            $contenido = json_encode(array("mensaje"=>"Se encontraron " . count($ordenes) . " ordenes"));
+            $contenido = json_encode(array("Ordenes"=>$ordenes));
             return $this->setResponse($response, $contenido);
         } catch (Exception $e) {
             $contenido = json_encode(array("mensaje"=>"Error " . $e->getMessage()));
@@ -55,11 +47,7 @@ class OrdenController extends AController{
 
             $ordenes = $this->miOrdenService->obtenerOrdenesPorEstadoSector($data);
 
-            foreach ($ordenes as $orden) {
-                $orden->imprimirOrden();
-            }
-
-            $contenido = json_encode(array("mensaje"=>"Se encontraron " . count($ordenes) . " ordenes"));
+            $contenido = json_encode(array("Ordenes"=>$ordenes));
             return $this->setResponse($response, $contenido);
         } catch (Exception $e) {
             $contenido = json_encode(array("mensaje"=>"Error " . $e->getMessage()));

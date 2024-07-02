@@ -36,12 +36,7 @@ class ProductoController extends AController implements IController {
             $productos = $this->miProductoService->obtenerTodosLosProductos();
 
             if ($productos != null && count($productos) > 0) {
-
-                foreach ($productos as $producto) {
-                    $producto->imprimirProducto();
-                }
-    
-                $contenido = json_encode(array("mensaje"=>"Consulta exitosa, se encontraron " . count($productos) . " productos"));
+                $contenido = json_encode(array("Productos"=>$productos));
             }
             else {
                 $contenido = json_encode(array("mensaje"=>"No se encontraron productos"));
@@ -63,8 +58,7 @@ class ProductoController extends AController implements IController {
             $producto = $this->miProductoService->obtenerProductoPorTipo($data);
 
             if ($producto != null) {
-                $producto->imprimirProducto();
-                $contenido = json_encode(array("mensaje"=>"Consulta exitosa"));
+                $contenido = json_encode(array("Producto"=>$producto));
             }
             else {
                 $contenido = json_encode(array("mensaje"=>"No se encontró el producto"));

@@ -37,12 +37,7 @@ class PedidoController extends AController implements IController {
             $pedidos = $this->miPedidoService->obtenerTodosLosPedidos();
 
             if ($pedidos != null && count($pedidos) > 0) {
-
-                foreach ($pedidos as $pedido) {
-                    $pedido->imprimirPedido();
-                }
-    
-                $contenido = json_encode(array("mensaje"=>"Consulta exitosa, se encontraron " . count($pedidos) . " pedidos"));
+                $contenido = json_encode(array("Pedidos"=>$pedidos));
             }
             else {
                 $contenido = json_encode(array("mensaje"=>"No se encontraron pedidos"));
@@ -64,8 +59,7 @@ class PedidoController extends AController implements IController {
             $pedido = $this->miPedidoService->obtenerUnPedido($data);
 
             if ($pedido != null) {
-                $pedido->imprimirPedido();
-                $contenido = json_encode(array("mensaje"=>"Consulta exitosa"));
+                $contenido = json_encode(array("Pedido"=>$pedido));
             }
             else {
                 $contenido = json_encode(array("mensaje"=>"No se encontro el pedido"));
