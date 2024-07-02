@@ -20,12 +20,17 @@ require_once './Controllers/PedidoController.php';
 require_once './Controllers/ProductoController.php';
 require_once './Controllers/UsuarioController.php';
 require_once './Controllers/OrdenController.php';
+require_once './Controllers/LoginController.php';
 //Middlewares
 require_once './Middlewares/MValidarMesa.php';
 require_once './Middlewares/MValidarPedido.php';
 require_once './Middlewares/MValidarProducto.php';
 require_once './Middlewares/MValidarUsuario.php';
 require_once './Middlewares/MLowerCase.php';
+//Autenticacion
+require_once './Middlewares/MValidarLogin.php';
+require_once './Middlewares/MAutenticacionToken.php';
+require_once './Middlewares/MAutenticacionPerfil.php';
 
 try {
     // Load ENV
@@ -54,7 +59,7 @@ try {
     $app->group('/pedido', function (RouteCollectorProxy $group) {
       $group->get('/obtenerTodos', PedidoController::class . ':getAll');
       $group->post('/obtenerUno', PedidoController::class . ':get')->add(new MValidarPedido("codigo"));
-      $group->post('/alta', PedidoController::class . ':add')->add(new MValidarPedido("nombreCliente", "idMesa"));
+      $group->post('/alta', PedidoController::class . ':add')->add(new MValidarPedido("nombreCliente", "idMesa"))->add(new MAutenticacionPerfil(['Mozo']));
       $group->put('/modificar', PedidoController::class . ':update')->add(new MValidarPedido("codigo"));
       $group->put('/baja', PedidoController::class . ':delete')->add(new MValidarPedido("codigo"));
     });
@@ -76,9 +81,11 @@ try {
     });
 
     $app->group('/orden', function (RouteCollectorProxy $group) {
-      $group->get('/obtenerTodos', OrdenController::class . ':mostrarTodas');  
+      $group->get('/obtenerTodos', OrdenController::class . ':mostrarTodas')->add(new MAutenticacionPerfil(['Mozo']));  
       $group->post('/obtenerPorEstado', OrdenController::class . ':mostrarOrdenesPorEstado');            
     });
+
+    $app->post('/login', \LoginController::class . ':loginUsuario')->add(new MValidarLogin());
 
     $app->run();
 } 
