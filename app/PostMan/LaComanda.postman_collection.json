@@ -94,6 +94,44 @@
 					"response": []
 				},
 				{
+					"name": "TodasOrdenes",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MTk5MjE2MTYsImV4cCI6MTcxOTk4MTYxNiwiYXVkIjoiZjgwZmFmZDQwOTMyY2VkYTM0YTQ5YjEyYzg1NjZkZDAzZjhlNjNjNyIsImRhdGEiOnsicm9sIjo0fSwiYXBwIjoiVGVzdCBKV1QifQ.5W_juFsjzAy7OP5qOtf308kdBvQP_J-ZG2_bP8eJrbE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost:666/app/orden/obtenerTodos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"orden",
+								"obtenerTodos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "OrdenesPorEstado",
 					"request": {
 						"method": "POST",
@@ -125,12 +163,12 @@
 					"response": []
 				},
 				{
-					"name": "TodasOrdenes",
+					"name": "OrdenesEstadoSector",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:666/app/orden/obtenerTodos",
+							"raw": "http://localhost:666/app/orden/obtenerPorEstadoSector",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -139,7 +177,7 @@
 							"path": [
 								"app",
 								"orden",
-								"obtenerTodos"
+								"obtenerPorEstadoSector"
 							]
 						}
 					},
@@ -270,7 +308,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nombreCliente\": \"Luna\",\r\n    \"idMesa\": 5,\r\n    \"productos\": [\r\n        {\r\n            \"tipo\": \"milanesa a caballo\"\r\n        },\r\n        {\r\n            \"tipo\": \"hamburguesa de garbanzo\"\r\n        },\r\n        {\r\n            \"tipo\": \"hamburguesa de garbanzo\"\r\n        },\r\n        {\r\n            \"tipo\": \"corona\"\r\n        },\r\n        {\r\n            \"tipo\": \"daikiri\"\r\n        }\r\n    ]\r\n}\r\n",
+							"raw": "{\r\n    \"nombreCliente\": \"juan\",\r\n    \"idMesa\": 4,\r\n    \"productos\": [\r\n        {\r\n            \"tipo\": \"milanesa a caballo\"\r\n        },\r\n        {\r\n            \"tipo\": \"hamburguesa de garbanzo\"\r\n        },\r\n        {\r\n            \"tipo\": \"hamburguesa de garbanzo\"\r\n        },\r\n        {\r\n            \"tipo\": \"corona\"\r\n        },\r\n        {\r\n            \"tipo\": \"daikiri\"\r\n        }\r\n    ]\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -301,7 +339,122 @@
 		},
 		{
 			"name": "Modificaciones",
-			"item": []
+			"item": [
+				{
+					"name": "modificarEstadoOrden",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MTk5NTM1OTUsImV4cCI6MTcyMDAxMzU5NSwiYXVkIjoiZjgwZmFmZDQwOTMyY2VkYTM0YTQ5YjEyYzg1NjZkZDAzZjhlNjNjNyIsImRhdGEiOnsicm9sIjo0fSwiYXBwIjoiVGVzdCBKV1QifQ.tfqyl6ADq5tuVeFlEaNtbUsVAK0TKv5n6RCtKrUs_EE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 19,\r\n  \"estadoOrden\": 2,\r\n  \"tiempoEstimado\": 1500,\r\n  \"idUsuario\" : 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:666/app/orden/modificarEstado",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"orden",
+								"modificarEstado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ModificarEstadoMesa",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MTk5NTU5MzQsImV4cCI6MTcyMDAxNTkzNCwiYXVkIjoiZjgwZmFmZDQwOTMyY2VkYTM0YTQ5YjEyYzg1NjZkZDAzZjhlNjNjNyIsImRhdGEiOnsicm9sIjo0fSwiYXBwIjoiVGVzdCBKV1QifQ.6ci0yIY5lZhhhQPX92kCQy8i67tC7xA6WmqLES4OaWM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"codigo\": 1,\r\n    \"estadoMesa\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:666/app/mesa/modificar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"mesa",
+								"modificar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cliente",
+			"item": [
+				{
+					"name": "tiempoEstimadoMesa",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:666/app/orden/obtenerTodos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "666",
+					"path": [
+						"app",
+						"orden",
+						"obtenerTodos"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
