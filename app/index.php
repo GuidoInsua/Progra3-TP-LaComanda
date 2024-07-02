@@ -19,6 +19,7 @@ require_once './Controllers/MesaController.php';
 require_once './Controllers/PedidoController.php';
 require_once './Controllers/ProductoController.php';
 require_once './Controllers/UsuarioController.php';
+require_once './Controllers/OrdenController.php';
 //Middlewares
 require_once './Middlewares/MValidarMesa.php';
 require_once './Middlewares/MValidarPedido.php';
@@ -56,11 +57,6 @@ try {
       $group->post('/alta', PedidoController::class . ':add')->add(new MValidarPedido("nombreCliente", "idMesa"));
       $group->put('/modificar', PedidoController::class . ':update')->add(new MValidarPedido("codigo"));
       $group->put('/baja', PedidoController::class . ':delete')->add(new MValidarPedido("codigo"));
-      //------------------------------------------------------------------------
-      $group->group('/ordenes', function (RouteCollectorProxy $group) {
-        $group->post('/Pendientes', PedidoController::class . ':Pendientes');
-        $group->post('/TiempoEstimado', PedidoController::class . ':TiempoEstimado');
-      });
     });
 
     $app->group('/producto', function (RouteCollectorProxy $group) {
@@ -77,6 +73,10 @@ try {
       $group->post('/alta', UsuarioController::class . ':add')->add(new MValidarUsuario("nombre", "clave", "idRol"));  //ok
       $group->put('/modificar', UsuarioController::class . ':update')->add(new MValidarUsuario("nombre"));
       $group->put('/baja', UsuarioController::class . ':delete')->add(new MValidarUsuario("nombre"));
+    });
+
+    $app->group('/orden', function (RouteCollectorProxy $group) {
+      $group->post('/obtenerTodos', OrdenController::class . ':mostrarOrdenes');            
     });
 
     $app->run();

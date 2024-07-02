@@ -32,6 +32,14 @@ class Orden implements JsonSerializable {
         $this->_tiempoEstimado = empty($data['tiempoEstimado']) ? null : $data['tiempoEstimado'];
     }
 
+    public function __construct5($idPedido, $idProducto, $idUsuario, $estadoOrden, $tiempoEstimado) {
+        $this->_idPedido = $idPedido;
+        $this->_idProducto = $idProducto;
+        $this->_idUsuario = $idUsuario;
+        $this->_estadoOrden = $estadoOrden;
+        $this->_tiempoEstimado = $tiempoEstimado;
+    }
+
     public function jsonSerialize(): mixed {
         return [
             'id' => $this->_id,
