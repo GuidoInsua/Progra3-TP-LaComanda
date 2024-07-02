@@ -5,6 +5,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Response as SlimResponse;
 
+require_once 'Enums/EstadoMesaEnum.php';
+
 class MValidarMesa {
 
     private $paramsToValidate;
@@ -53,8 +55,8 @@ class MValidarMesa {
                     }
                     break;
                 case 'estadoMesa':
-                    if (empty($data['estadoMesa']) || !is_numeric($data['estadoMesa'])) {
-                        $errors['estadoMesa'] = 'estadoMesa es requerido y debe ser un numero';
+                    if (empty($data['estadoMesa']) || !is_numeric($data['estadoMesa']) || !EstadoMesaEnum::fromId((int)$data['estadoMesa'])) {
+                        $errors['estadoMesa'] = 'estadoMesa es requerido y debe ser un numero' . "<br>" . EstadoMesaEnum::imprimirOpciones();
                     }
                     break;
                 default:

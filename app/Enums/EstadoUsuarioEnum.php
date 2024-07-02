@@ -1,6 +1,8 @@
 <?php
 
-enum EstadoUsuarioEnum: int {
+require_once 'Interfaces/IEnum.php';
+
+enum EstadoUsuarioEnum: int implements IEnum{
     case Activo = 1;
     case Inactivo = 2;
 
@@ -17,6 +19,14 @@ enum EstadoUsuarioEnum: int {
             2 => self::Inactivo,
             default => null,
         };
+    }
+
+    public static function imprimirOpciones(): string {
+        $opciones = '';
+        foreach (self::cases() as $case) {
+            $opciones .= $case->value . ' = ' . $case->getNombre() . ' / ';
+        }
+        return rtrim($opciones, ' / ');
     }
 }
 

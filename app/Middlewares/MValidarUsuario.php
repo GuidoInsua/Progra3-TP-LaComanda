@@ -5,6 +5,9 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Response as SlimResponse;
 
+require_once 'Enums/EstadoUsuarioEnum.php';
+require_once 'Enums/RolEnum.php';
+
 class MValidarUsuario {
 
     private $paramsToValidate;
@@ -58,8 +61,8 @@ class MValidarUsuario {
                     }
                     break;
                 case 'idRol':
-                    if (empty($data['idRol']) || !is_numeric($data['idRol'])) {
-                        $errors['idRol'] = 'idRol es requerido y debe ser un numero';
+                    if (empty($data['idRol']) || !is_numeric($data['idRol']) || !RolEnum::fromId((int)$data['idRol'])) {
+                        $errors['idRol'] = 'idRol es requerido y debe ser un numero' . "<br>" . RolEnum::imprimirOpciones();
                     }
                     break;
                 case 'fechaBaja':
@@ -73,8 +76,8 @@ class MValidarUsuario {
                     }
                     break;
                 case 'estadoUsuario':
-                    if (empty($data['estadoUsuario']) || !is_numeric($data['estadoUsuario'])) {
-                        $errors['estadoUsuario'] = 'estadoUsuario es requerido y debe ser un numero';
+                    if (empty($data['estadoUsuario']) || !is_numeric($data['estadoUsuario']) || !EstadoUsuarioEnum::fromId((int)$data['estadoUsuario'])) {
+                        $errors['estadoUsuario'] = 'estadoUsuario es requerido y debe ser un numero' . "<br>" . EstadoUsuarioEnum::imprimirOpciones();
                     }
                     break;
             }

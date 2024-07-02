@@ -5,6 +5,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Response as SlimResponse;
 
+require_once 'Enums/EstadoPedidoEnum.php';
+
 class MValidarPedido {
 
     private $paramsToValidate;
@@ -63,8 +65,8 @@ class MValidarPedido {
                     }
                     break;
                 case 'estadoPedido':
-                    if (empty($data['estadoPedido']) || !is_numeric($data['estadoPedido'])) {
-                        $errors['estadoPedido'] = 'estadoPedido es requerido y debe ser un numero';
+                    if (empty($data['estadoPedido']) || !is_numeric($data['estadoPedido']) || !EstadoPedidoEnum::fromId((int)$data['estadoPedido'])) {
+                        $errors['estadoPedido'] = 'estadoPedido es requerido y debe ser un numero' . "<br>" . EstadoPedidoEnum::imprimirOpciones();
                     }
                     break;
                 case 'tiempoEstimado':

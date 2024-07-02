@@ -1,6 +1,8 @@
 <?php
 
-enum EstadoMesaEnum: int {
+require_once 'Interfaces/IEnum.php';
+
+enum EstadoMesaEnum: int implements IEnum{
     case EsperandoPedido = 1;
     case Comiendo = 2;
     case Pagando = 3;
@@ -26,6 +28,14 @@ enum EstadoMesaEnum: int {
             5 => self::Baja,
             default => null,
         };
+    }
+
+    public static function imprimirOpciones(): string {
+        $opciones = '';
+        foreach (self::cases() as $case) {
+            $opciones .= $case->value . ' = ' . $case->getNombre() . ' / ';
+        }
+        return rtrim($opciones, ' / ');
     }
 }
 

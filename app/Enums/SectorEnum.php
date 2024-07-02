@@ -1,6 +1,8 @@
 <?php
 
-enum SectorEnum: int {
+require_once 'Interfaces/IEnum.php';
+
+enum SectorEnum: int implements IEnum{
     case TragosYVinos = 1;
     case Choperas = 2;
     case Cocina = 3;
@@ -23,6 +25,14 @@ enum SectorEnum: int {
             4 => self::CandyBar,
             default => null,
         };
+    }
+
+    public static function imprimirOpciones(): string {
+        $opciones = '';
+        foreach (self::cases() as $case) {
+            $opciones .= $case->value . ' = ' . $case->getNombre() . ' / ';
+        }
+        return rtrim($opciones, ' / ');
     }
 }
 

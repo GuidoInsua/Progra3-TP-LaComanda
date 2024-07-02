@@ -1,6 +1,8 @@
 <?php
 
-enum RolEnum: int {
+require_once 'Interfaces/IEnum.php';
+
+enum RolEnum: int implements IEnum{
     case Bartender = 1;
     case Cervecero = 2;
     case Cocinero = 3;
@@ -28,6 +30,14 @@ enum RolEnum: int {
             5 => self::Socio,
             default => null,
         };
+    }
+
+    public static function imprimirOpciones(): string {
+        $opciones = '';
+        foreach (self::cases() as $case) {
+            $opciones .= $case->value . ' = ' . $case->getNombre() . ' / ';
+        }
+        return rtrim($opciones, ' / ');
     }
 }
 

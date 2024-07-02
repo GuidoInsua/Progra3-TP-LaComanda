@@ -5,6 +5,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Response as SlimResponse;
 
+require_once 'Enums/SectorEnum.php';
+
 class MValidarProducto{
 
     private $paramsToValidate;
@@ -58,8 +60,8 @@ class MValidarProducto{
                     }
                     break;
                 case 'idSector':
-                    if (empty($data['idSector']) || !is_numeric($data['idSector'])) {
-                        $errors['idSector'] = 'idSector es requerido y debe ser un numero';
+                    if (empty($data['idSector']) || !is_numeric($data['idSector']) || !SectorEnum::fromId((int)$data['idSector'])) {
+                        $errors['idSector'] = 'idSector es requerido y debe ser un numero' . "<br>" . SectorEnum::imprimirOpciones();
                     }
                     break;
                 case 'fechaBaja':
