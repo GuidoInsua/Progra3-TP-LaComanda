@@ -8,7 +8,144 @@
 	"item": [
 		{
 			"name": "Consultas",
-			"item": []
+			"item": [
+				{
+					"name": "TodosUsuarios",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/usuario/obtenerTodos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"usuario",
+								"obtenerTodos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TodosProductos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/producto/obtenerTodos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"producto",
+								"obtenerTodos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TodosMesas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/mesa/obtenerTodas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"mesa",
+								"obtenerTodas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TodosPedidos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/pedido/obtenerTodos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"pedido",
+								"obtenerTodos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OrdenesPorEstado",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "estadoOrden",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/orden/obtenerPorEstado",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"orden",
+								"obtenerPorEstado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TodasOrdenes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/orden/obtenerTodos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"orden",
+								"obtenerTodos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "Altas",
@@ -102,7 +239,13 @@
 						"header": [],
 						"body": {
 							"mode": "formdata",
-							"formdata": []
+							"formdata": [
+								{
+									"key": "codigo",
+									"value": "5",
+									"type": "text"
+								}
+							]
 						},
 						"url": {
 							"raw": "http://localhost:666/app/mesa/alta",
@@ -114,6 +257,36 @@
 							"path": [
 								"app",
 								"mesa",
+								"alta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AltaPedido",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombreCliente\": \"Luna\",\r\n    \"idMesa\": 5,\r\n    \"productos\": [\r\n        {\r\n            \"tipo\": \"milanesa a caballo\"\r\n        },\r\n        {\r\n            \"tipo\": \"hamburguesa de garbanzo\"\r\n        },\r\n        {\r\n            \"tipo\": \"hamburguesa de garbanzo\"\r\n        },\r\n        {\r\n            \"tipo\": \"corona\"\r\n        },\r\n        {\r\n            \"tipo\": \"daikiri\"\r\n        }\r\n    ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:666/app/pedido/alta",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"pedido",
 								"alta"
 							]
 						}

@@ -11,27 +11,22 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 class PedidoService extends AService {
 
     public function altaPedido($parametros) {
+        //entiendo que una mesa puede tener varios pedidos, pido comida despues poste (por eso no valido que exista pedido)
         try {
-            $pedidoExistente = $this->obtenerPedidoBasePorCodigo($parametros['codigo']);
+            $datosPedido = [
+                'nombreCliente' => $parametros['nombreCliente'],
+                'idMesa' => $parametros['idMesa'],
+            ];
 
-            if ($pedidoExistente) {
-                $mensaje = "El pedido ya existe";
-            } else {
-                $datosPedido = [
-                    'nombreCliente' => $parametros['nombreCliente'],
-                    'idMesa' => $parametros['idMesa'],
-                ];
+            $productos = $parametros['productos'];
     
-                $productos = $parametros['productos'];
-        
-                $pedido = new Pedido($datosPedido);
+            $pedido = new Pedido($datosPedido);
 
-                $this->GenerarDatosBasicosPedido($pedido);
-                $idPedido = $this->registrarNuevoPedido($pedido);
-                $this->altaRelacionPedidoProducto($idPedido, $productos);
-                $mensaje = "Pedido dado de alta exitosamente";
-            }
-
+            $this->GenerarDatosBasicosPedido($pedido);
+            $idPedido = $this->registrarNuevoPedido($pedido);
+            $this->altaRelacionPedidoProducto($idPedido, $productos);
+            $mensaje = "Pedido dado de alta exitosamente";
+            
             return $mensaje;
         } catch (Exception $e) {
             throw new RuntimeException("Error al dar de alta el pedido: " . $e->getMessage());
@@ -180,15 +175,15 @@ class PedidoService extends AService {
                 if($nuevoProducto = $miProductoService->obtenerProductoPorTipo($producto)) {
 
                     $idProducto = $nuevoProducto->getId();
-                    $estadoRelacion = EstadoPedidoEnum::Pendiente->value;  
+                    $estadoOrden = EstadoPedidoEnum::Pendiente->value;  
 
                     $consulta = $this->accesoDatos->prepararConsulta("
-                    INSERT INTO relacionpedidoproducto (idPedido, idProducto, estadoRelacion) 
-                    VALUES (:idPedido, :idProducto, :estadoRelacion)
+                    INSERT INTO relacionpedidoproducto (idPedido, idProducto, estadoOrden) 
+                    VALUES (:idPedido, :idProducto, :estadoOrden)
                     ");
                     $consulta->bindParam(':idPedido', $idPedido, PDO::PARAM_INT);
                     $consulta->bindParam(':idProducto', $idProducto, PDO::PARAM_INT);
-                    $consulta->bindParam(':estadoRelacion', $estadoRelacion, PDO::PARAM_INT);
+                    $consulta->bindParam(':estadoOrden', $estadoOrden, PDO::PARAM_INT);
                     $consulta->execute();
                 }
             }
@@ -245,7 +240,6 @@ class PedidoService extends AService {
             throw new RuntimeException("Error al obtener los productos del pedido: " . $e->getMessage());
         }
     }
-
 
 }
 

@@ -8,6 +8,22 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 class OrdenService extends AService {
 
+    public function obtenerTodasLasOrdenes() {
+        try {
+            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM relacionpedidoproducto");
+            $consulta->execute();
+            $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
+    
+            $ordenes = [];
+            foreach ($resultados as $fila) {
+                $ordenes[] = new Orden($fila);
+            }
+            return $ordenes;
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al obtener los pedidos pendientes: " . $e->getMessage());
+        }
+    }
+
     public function obtenerOrdenesPorEstado($parametros) {
         try {
             $estadoOrden = $parametros['estadoOrden'];

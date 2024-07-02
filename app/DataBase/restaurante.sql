@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 02, 2024 at 08:07 AM
+-- Generation Time: Jul 02, 2024 at 01:34 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -62,6 +62,13 @@ CREATE TABLE `pedido` (
   `fechaCreacion` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `pedido`
+--
+
+INSERT INTO `pedido` (`id`, `codigo`, `nombreCliente`, `idMesa`, `estadoPedido`, `tiempoEstimado`, `fechaBaja`, `precioFinal`, `fechaCreacion`) VALUES
+(10, '3c4e5e4f1b', 'Luna', 5, '1', NULL, NULL, NULL, '2024-07-02 08:30:33');
+
 -- --------------------------------------------------------
 
 --
@@ -84,7 +91,11 @@ INSERT INTO `producto` (`id`, `precio`, `tipo`, `idSector`, `fechaBaja`) VALUES
 (5, 4000.00, 'vino', 1, NULL),
 (6, 4000.00, 'birra', 2, NULL),
 (7, 980.00, 'empanada', 3, NULL),
-(8, 2000.00, 'torta', 4, NULL);
+(8, 2000.00, 'torta', 4, NULL),
+(9, 6000.00, 'milanesa a caballo', 3, NULL),
+(10, 4000.00, 'hamburguesa de garbanzo', 3, NULL),
+(11, 2000.00, 'corona', 2, NULL),
+(12, 2500.00, 'daikiri', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -97,9 +108,20 @@ CREATE TABLE `relacionpedidoproducto` (
   `idPedido` int(11) DEFAULT NULL,
   `idProducto` int(11) DEFAULT NULL,
   `idUsuario` int(11) DEFAULT NULL,
-  `estadoRelacion` varchar(50) NOT NULL,
+  `estadoOrden` int(11) NOT NULL,
   `tiempoEstimado` time DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `relacionpedidoproducto`
+--
+
+INSERT INTO `relacionpedidoproducto` (`id`, `idPedido`, `idProducto`, `idUsuario`, `estadoOrden`, `tiempoEstimado`) VALUES
+(12, 10, 9, NULL, 1, NULL),
+(13, 10, 10, NULL, 1, NULL),
+(14, 10, 10, NULL, 1, NULL),
+(15, 10, 11, NULL, 1, NULL),
+(16, 10, 12, NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -206,7 +228,7 @@ ALTER TABLE `relacionpedidoproducto`
   ADD KEY `idPedido` (`idPedido`),
   ADD KEY `idProducto` (`idProducto`),
   ADD KEY `idUsuario` (`idUsuario`),
-  ADD KEY `idx_relacionPedidoProducto_estado` (`estadoRelacion`);
+  ADD KEY `idx_relacionPedidoProducto_estado` (`estadoOrden`);
 
 --
 -- Indexes for table `roles`
@@ -244,19 +266,19 @@ ALTER TABLE `mesa`
 -- AUTO_INCREMENT for table `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `relacionpedidoproducto`
 --
 ALTER TABLE `relacionpedidoproducto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `roles`
