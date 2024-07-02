@@ -3,6 +3,7 @@
 require_once 'Services/AService.php';
 require_once 'Enums/EstadoPedidoEnum.php';
 require_once 'Models/Orden.php';
+require_once 'Services/ProductoService.php';
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
@@ -42,43 +43,24 @@ class OrdenService extends AService {
             throw new RuntimeException("Error al obtener los pedidos pendientes: " . $e->getMessage());
         }
     }
-    
-
-    public function obtenerOrdenesPorSector($parametros) {
-        try {
-            $sector = $parametros['sector'];
-
-            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM relacionpedidoproducto WHERE sector = :sector");
-            $consulta->bindParam(':sector', $sector, PDO::PARAM_STR);
-            $consulta->execute();
-            $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
-    
-            $ordenes = [];
-            foreach ($resultados as $fila) {
-                $ordenes[] = new Orden($fila);
-            }
-            return $ordenes;
-        } catch (Exception $e) {
-            throw new RuntimeException("Error al obtener los pedidos por sector: " . $e->getMessage());
-        }
-    }
 
     public function obtenerOrdenesPorEstadoSector($parametros){
         try {
-            $estado = $parametros['estadoOrden'];
-            $sector = $parametros['sector'];
+            $estadoOrden = $parametros['estadoOrden'];
 
-            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM relacionpedidoproducto WHERE sector = :sector AND estadoOrden = :estadoOrden");
-            $consulta->bindParam(':estadoOrden', $estado, PDO::PARAM_STR);
-            $consulta->bindParam(':sector', $sector, PDO::PARAM_STR);
-            $consulta->execute();
-            $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
-    
+            $ordenesSector = $this->obtenerOrdenesPorSector($parametros);
+
             $ordenes = [];
-            foreach ($resultados as $fila) {
-                $ordenes[] = new Orden($fila);
+
+            foreach ($ordenesSector as $orden) {
+                if ($orden->getEstadoOrden() == $estadoOrden) {
+                    $ordenes[] = $orden;
+                }
             }
+
             return $ordenes;
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al obtener los pedidos por sector: " . $e->getMessage());
         } catch (Exception $e) {
             throw new RuntimeException("Error al obtener los pedidos por sector: " . $e->getMessage());
         }
@@ -132,6 +114,43 @@ class OrdenService extends AService {
 
         } catch (Exception $e) {
             throw new RuntimeException("Error al modificar el estado de la orden: " . $e->getMessage());
+        }
+    }
+
+    public function obtenerOrdenesPorSector($parametros): array {
+        try {
+            $sector = $parametros['idSector'];
+    
+            $productoService = new ProductoService();
+            $productos = $productoService->obtenerTodosLosProductosPorSector($sector);
+    
+            $ordenes = [];
+    
+            foreach ($productos as $producto) {
+                $ordenesPorProducto = $this->obtenerOrdenesPorProducto($producto->getId());
+                $ordenes = array_merge($ordenes, $ordenesPorProducto);
+            }
+    
+            return $ordenes;
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al obtener los pedidos por sector: " . $e->getMessage());
+        }
+    }
+    
+    public function obtenerOrdenesPorProducto($idProducto): array {
+        try {
+            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM relacionpedidoproducto WHERE idProducto = :idProducto");
+            $consulta->bindParam(':idProducto', $idProducto, PDO::PARAM_INT);
+            $consulta->execute();
+            $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
+    
+            $ordenes = [];
+            foreach ($resultados as $fila) {
+                $ordenes[] = new Orden($fila);
+            }
+            return $ordenes;
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al obtener los pedidos por producto: " . $e->getMessage());
         }
     }
 

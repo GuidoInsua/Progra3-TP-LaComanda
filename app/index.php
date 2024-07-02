@@ -26,6 +26,7 @@ require_once './Middlewares/MValidarMesa.php';
 require_once './Middlewares/MValidarPedido.php';
 require_once './Middlewares/MValidarProducto.php';
 require_once './Middlewares/MValidarUsuario.php';
+require_once './Middlewares/MValidarOrden.php';
 require_once './Middlewares/MLowerCase.php';
 //Autenticacion
 require_once './Middlewares/MValidarLogin.php';
@@ -81,8 +82,9 @@ try {
     });
 
     $app->group('/orden', function (RouteCollectorProxy $group) {
-      $group->get('/obtenerTodos', OrdenController::class . ':mostrarTodas')->add(new MAutenticacionPerfil(['Mozo']));  
-      $group->post('/obtenerPorEstado', OrdenController::class . ':mostrarOrdenesPorEstado');            
+      $group->get('/obtenerTodos', OrdenController::class . ':mostrarTodas')->add(new MValidarOrden("idSector", "estadoOrden"))->add(new MAutenticacionPerfil(['Mozo']));  
+      $group->post('/obtenerPorEstado', OrdenController::class . ':mostrarOrdenesPorEstado')->add(new MValidarOrden("idSector", "estadoOrden"));    
+      $group->post('/obtenerPorEstadoSector', OrdenController::class . ':mostrarOrdenesPorEstadoSector')->add(new MValidarOrden("idSector", "estadoOrden"));        
     });
 
     $app->post('/login', \LoginController::class . ':loginUsuario')->add(new MValidarLogin());

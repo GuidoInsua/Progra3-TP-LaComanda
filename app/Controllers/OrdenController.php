@@ -48,6 +48,24 @@ class OrdenController extends AController{
             return $this->setResponse($response, $contenido);
         }
     }
+
+    public function mostrarOrdenesPorEstadoSector($request, $response, $args){
+        try {
+            $data = $request->getParsedBody();
+
+            $ordenes = $this->miOrdenService->obtenerOrdenesPorEstadoSector($data);
+
+            foreach ($ordenes as $orden) {
+                $orden->imprimirOrden();
+            }
+
+            $contenido = json_encode(array("mensaje"=>"Se encontraron " . count($ordenes) . " ordenes"));
+            return $this->setResponse($response, $contenido);
+        } catch (Exception $e) {
+            $contenido = json_encode(array("mensaje"=>"Error " . $e->getMessage()));
+            return $this->setResponse($response, $contenido);
+        }
+    }
 }
 
 

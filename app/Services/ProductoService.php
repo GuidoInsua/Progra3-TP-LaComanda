@@ -77,6 +77,25 @@ class ProductoService extends AService {
         }
     }
 
+    public function obtenerTodosLosProductosPorSector($idSector) {
+        try {
+            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM producto WHERE idSector = :idSector");
+            $consulta->bindParam(':idSector', $idSector, PDO::PARAM_INT);
+            $consulta->execute();
+            $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
+
+            $productos = [];
+
+            foreach ($resultados as $fila) {
+                $producto = new Producto($fila);
+                $productos[] = $producto;
+            }
+            return $productos;
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al obtener los productos por sector: " . $e->getMessage());
+        }
+    }
+
     public function modificarProducto($parametros) {
         try {
             $productoExistente = $this->obtenerProductoPorTipo($parametros['tipo']);
