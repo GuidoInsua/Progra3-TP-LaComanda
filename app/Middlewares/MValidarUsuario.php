@@ -62,7 +62,7 @@ class MValidarUsuario {
                     break;
                 case 'idRol':
                     if (empty($data['idRol']) || !is_numeric($data['idRol']) || !RolEnum::fromId((int)$data['idRol'])) {
-                        $errors['idRol'] = 'idRol es requerido y debe ser un numero' . "<br>" . RolEnum::imprimirOpciones();
+                        $errors['idRol'] = 'idRol es requerido y debe ser un numero ' . RolEnum::imprimirOpciones();
                     }
                     break;
                 case 'fechaBaja':
@@ -77,7 +77,7 @@ class MValidarUsuario {
                     break;
                 case 'estadoUsuario':
                     if (empty($data['estadoUsuario']) || !is_numeric($data['estadoUsuario']) || !EstadoUsuarioEnum::fromId((int)$data['estadoUsuario'])) {
-                        $errors['estadoUsuario'] = 'estadoUsuario es requerido y debe ser un numero' . "<br>" . EstadoUsuarioEnum::imprimirOpciones();
+                        $errors['estadoUsuario'] = 'estadoUsuario es requerido y debe ser un numero ' . EstadoUsuarioEnum::imprimirOpciones();
                     }
                     break;
             }

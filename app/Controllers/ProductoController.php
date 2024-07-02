@@ -109,6 +109,7 @@ class ProductoController extends AController implements IController {
             $contenido = json_encode(array("mensaje"=>"Error al dar de baja el producto " . $e->getMessage()));
 
             return $this->setResponse($response, $contenido);
+        }
     }
 }
 

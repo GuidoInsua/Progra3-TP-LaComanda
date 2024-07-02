@@ -66,7 +66,7 @@ try {
     $app->group('/usuario', function (RouteCollectorProxy $group) {
       $group->get('/obtenerTodos', UsuarioController::class . ':getAll');
       $group->post('/obtenerUno', UsuarioController::class . ':get')->add(new MValidarUsuario("nombre"));
-      $group->post('/alta', UsuarioController::class . ':add')->add(new MValidarUsuario("nombre"));
+      $group->post('/alta', UsuarioController::class . ':add')->add(new MValidarUsuario("nombre", "clave", "idRol"));  //ok
       $group->put('/modificar', UsuarioController::class . ':update')->add(new MValidarUsuario("nombre"));
       $group->put('/baja', UsuarioController::class . ':delete')->add(new MValidarUsuario("nombre"));
     });

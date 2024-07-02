@@ -61,7 +61,7 @@ class MValidarProducto{
                     break;
                 case 'idSector':
                     if (empty($data['idSector']) || !is_numeric($data['idSector']) || !SectorEnum::fromId((int)$data['idSector'])) {
-                        $errors['idSector'] = 'idSector es requerido y debe ser un numero' . "<br>" . SectorEnum::imprimirOpciones();
+                        $errors['idSector'] = 'idSector es requerido y debe ser un numero ' . SectorEnum::imprimirOpciones();
                     }
                     break;
                 case 'fechaBaja':

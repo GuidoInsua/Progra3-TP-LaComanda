@@ -66,7 +66,7 @@ class MValidarPedido {
                     break;
                 case 'estadoPedido':
                     if (empty($data['estadoPedido']) || !is_numeric($data['estadoPedido']) || !EstadoPedidoEnum::fromId((int)$data['estadoPedido'])) {
-                        $errors['estadoPedido'] = 'estadoPedido es requerido y debe ser un numero' . "<br>" . EstadoPedidoEnum::imprimirOpciones();
+                        $errors['estadoPedido'] = 'estadoPedido es requerido y debe ser un numero ' . EstadoPedidoEnum::imprimirOpciones();
                     }
                     break;
                 case 'tiempoEstimado':

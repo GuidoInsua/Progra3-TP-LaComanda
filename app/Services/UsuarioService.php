@@ -90,7 +90,7 @@ class UsuarioService extends AService {
     private function verificarUsuarioExistente($nombre) {
         try {
             $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM usuario WHERE nombre = :nombre");
-            $consulta->bindParam(':nombre', $nombre);
+            $consulta->bindParam(':nombre', $nombre, PDO::PARAM_STR);
             $consulta->execute();
             $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
 
@@ -107,16 +107,22 @@ class UsuarioService extends AService {
     private function registrarNuevoUsuario($usuario) {
         try {
             $fecha = date('Y-m-d');
-
+            $nombre = $usuario->getNombre();
+            $clave = $usuario->getClave();
+            $idRol = $usuario->getIdRol();
+            $estadoUsuario = $usuario->getEstadoUsuario();
+    
             $consulta = $this->accesoDatos->prepararConsulta("
             INSERT INTO usuario (nombre, clave, idRol, fechaAlta, estadoUsuario) 
             VALUES (:nombre, :clave, :idRol, :fechaAlta, :estadoUsuario)
             ");
-            $consulta->bindParam(':nombre', $usuario->getNombre());
-            $consulta->bindParam(':clave', $usuario->getClave());
-            $consulta->bindParam(':idRol', $usuario->getIdRol());
-            $consulta->bindParam(':fechaAlta', $fecha);
-            $consulta->bindParam(':estadoUsuario', $usuario->getEstadoUsuario());
+    
+            // Usar las variables en bindParam
+            $consulta->bindParam(':nombre', $nombre, PDO::PARAM_STR);
+            $consulta->bindParam(':clave', $clave, PDO::PARAM_STR);
+            $consulta->bindParam(':idRol', $idRol, PDO::PARAM_INT);
+            $consulta->bindParam(':fechaAlta', $fecha, PDO::PARAM_STR);
+            $consulta->bindParam(':estadoUsuario', $estadoUsuario, PDO::PARAM_INT);
             $consulta->execute();
         } catch (Exception $e) {
             throw new RuntimeException("Error al registrar el nuevo usuario: " . $e->getMessage());
@@ -125,9 +131,13 @@ class UsuarioService extends AService {
 
     private function actualizarEstado($parametros) {
         try {
+
+            $estadoUsuario = $parametros['estadoUsuario'];
+            $nombre = $parametros['nombre'];
+
             $consulta = $this->accesoDatos->prepararConsulta("UPDATE usuario SET estadoUsuario = :estadoUsuario WHERE nombre = :nombre");
-            $consulta->bindParam(':estadoUsuario', $parametros['estadoUsuario']);
-            $consulta->bindParam(':nombre', $parametros['nombre']);
+            $consulta->bindParam(':estadoUsuario', $estadoUsuario, PDO::PARAM_INT);
+            $consulta->bindParam(':nombre', $nombre, PDO::PARAM_STR);
             $consulta->execute();
         } catch (Exception $e) {
             throw new RuntimeException("Error al actualizar el usuario: " . $e->getMessage());
@@ -136,9 +146,13 @@ class UsuarioService extends AService {
 
     private function actualizarRol($parametros) {
         try {
+
+            $idRol = $parametros['idRol'];
+            $nombre = $parametros['nombre'];
+
             $consulta = $this->accesoDatos->prepararConsulta("UPDATE usuario SET idRol = :idRol WHERE nombre = :nombre");
-            $consulta->bindParam(':idRol', $parametros['idRol']);
-            $consulta->bindParam(':nombre', $parametros['nombre']);
+            $consulta->bindParam(':idRol', $idRol, PDO::PARAM_INT);
+            $consulta->bindParam(':nombre', $nombre, PDO::PARAM_STR);
             $consulta->execute();
         } catch (Exception $e) {
             throw new RuntimeException("Error al actualizar el rol del usuario: " . $e->getMessage());

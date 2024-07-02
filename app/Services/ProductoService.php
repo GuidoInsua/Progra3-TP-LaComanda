@@ -89,8 +89,8 @@ class ProductoService extends AService {
     private function verificarProductoExistente($tipo, $idSector) {
         try {
             $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM producto WHERE tipo = :tipo AND idSector = :idSector");
-            $consulta->bindValue(':tipo', $tipo, PDO::PARAM_STR);
-            $consulta->bindValue(':idSector', $idSector, PDO::PARAM_INT);
+            $consulta->bindParam(':tipo', $tipo, PDO::PARAM_STR);
+            $consulta->bindParam(':idSector', $idSector, PDO::PARAM_INT);
             $consulta->execute();
             $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
 
@@ -106,10 +106,15 @@ class ProductoService extends AService {
 
     private function registrarNuevoProducto($producto) {
         try {
+
+            $precio = $producto->getPrecio();
+            $tipo = $producto->getTipo();
+            $idSector = $producto->getIdSector();
+
             $consulta = $this->accesoDatos->prepararConsulta("INSERT INTO producto (precio, tipo, idSector) VALUES (:precio, :tipo, :idSector)");
-            $consulta->bindValue(':precio', $producto->getPrecio(), PDO::PARAM_STR);
-            $consulta->bindValue(':tipo', $producto->getTipo(), PDO::PARAM_STR);
-            $consulta->bindValue(':idSector', $producto->getIdSector(), PDO::PARAM_INT);
+            $consulta->bindParam(':precio', $precio, PDO::PARAM_INT);
+            $consulta->bindParam(':tipo', $tipo, PDO::PARAM_STR);
+            $consulta->bindParam(':idSector', $idSector, PDO::PARAM_INT);
             $consulta->execute();
         } catch (Exception $e) {
             throw new RuntimeException("Error al registrar el producto: " . $e->getMessage());
@@ -118,10 +123,15 @@ class ProductoService extends AService {
 
     private function actualizarPrecioProducto($parametros) {
         try {
+
+            $precio = $parametros['precio'];
+            $tipo = $parametros['tipo'];
+            $idSector = $parametros['idSector'];
+
             $consulta = $this->accesoDatos->prepararConsulta("UPDATE producto SET precio = :precio WHERE tipo = :tipo AND idSector = :idSector");
-            $consulta->bindValue(':precio', $parametros['precio'], PDO::PARAM_STR);
-            $consulta->bindValue(':tipo', $parametros['tipo'], PDO::PARAM_STR);
-            $consulta->bindValue(':idSector', $parametros['idSector'], PDO::PARAM_INT);
+            $consulta->bindParam(':precio', $precio, PDO::PARAM_STR);
+            $consulta->bindParam(':tipo', $tipo, PDO::PARAM_STR);
+            $consulta->bindParam(':idSector', $idSector, PDO::PARAM_INT);
             $consulta->execute();
         } catch (Exception $e) {
             throw new RuntimeException("Error al actualizar el precio del producto: " . $e->getMessage());
@@ -130,10 +140,14 @@ class ProductoService extends AService {
 
     private function actualizarFechaBajaProducto($parametros) {
         try {
+            $fechaBaja = $parametros['fechaBaja'];
+            $tipo = $parametros['tipo'];
+            $idSector = $parametros['idSector'];
+
             $consulta = $this->accesoDatos->prepararConsulta("UPDATE producto SET fechaBaja = :fechaBaja WHERE tipo = :tipo AND idSector = :idSector");
-            $consulta->bindValue(':fechaBaja', $parametros['fechaBaja'], PDO::PARAM_STR);
-            $consulta->bindValue(':tipo', $parametros['tipo'], PDO::PARAM_STR);
-            $consulta->bindValue(':idSector', $parametros['idSector'], PDO::PARAM_INT);
+            $consulta->bindParam(':fechaBaja', $fechaBaja, PDO::PARAM_STR);
+            $consulta->bindParam(':tipo', $tipo, PDO::PARAM_STR);
+            $consulta->bindParam(':idSector', $idSector, PDO::PARAM_INT);
             $consulta->execute();
         } catch (Exception $e) {
             throw new RuntimeException("Error al actualizar la fecha de baja del producto: " . $e->getMessage());

@@ -90,30 +90,49 @@ class MesaService extends AService {
     }
 
     private function verificarMesaExistente($codigo) {
-        $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM mesa WHERE codigo = :codigo");
-        $consulta->bindParam(':codigo', $codigo, PDO::PARAM_STR);
-        $consulta->execute();
-        return $consulta->fetch(PDO::FETCH_ASSOC);
+        try {
+            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM mesa WHERE codigo = :codigo");
+            $consulta->bindParam(':codigo', $codigo, PDO::PARAM_STR);
+            $consulta->execute();
+            return $consulta->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al verificar la mesa: " . $e->getMessage());
+        }
     }
 
     private function registrarNuevaMesa($mesa) {
-        $consultaInsert = $this->accesoDatos->prepararConsulta("
-            INSERT INTO mesa (codigo) 
-            VALUES (:codigo)
-        ");
-        $consultaInsert->bindValue(':codigo', $mesa->getCodigo(), PDO::PARAM_STR);
-        $consultaInsert->execute();
+        try {
+
+            $codigo = $mesa->getCodigo();
+
+            $consultaInsert = $this->accesoDatos->prepararConsulta("
+                INSERT INTO mesa (codigo) 
+                VALUES (:codigo)
+            ");
+            $consultaInsert->bindParam(':codigo', $codigo, PDO::PARAM_STR);
+            $consultaInsert->execute();
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al registar la mesa: " . $e->getMessage());
+        }
     }
 
     private function actualizarEstadoMesa($parametros) {
-        $actualizacion = $this->accesoDatos->prepararConsulta("
-            UPDATE mesa 
-            SET estadoMesa = :estadoMesa
-            WHERE codigo = :codigo
-        ");
-        $actualizacion->bindParam(':estadoMesa', $parametros['estadoMesa'], PDO::PARAM_STR);
-        $actualizacion->bindParam(':codigo', $parametros['codigo'], PDO::PARAM_INT);
-        $actualizacion->execute();
+        try {
+
+            $estadoMesa = $parametros['estadoMesa'];
+            $codigo = $parametros['codigo'];
+
+            $actualizacion = $this->accesoDatos->prepararConsulta("
+                UPDATE mesa 
+                SET estadoMesa = :estadoMesa
+                WHERE codigo = :codigo
+            ");
+            $actualizacion->bindParam(':estadoMesa', $estadoMesa, PDO::PARAM_INT);
+            $actualizacion->bindParam(':codigo', $codigo, PDO::PARAM_INT);
+            $actualizacion->execute();
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al actualizar el estado de la mesa: " . $e->getMessage());
+        }
     }
 }
 

@@ -56,7 +56,7 @@ class MValidarMesa {
                     break;
                 case 'estadoMesa':
                     if (empty($data['estadoMesa']) || !is_numeric($data['estadoMesa']) || !EstadoMesaEnum::fromId((int)$data['estadoMesa'])) {
-                        $errors['estadoMesa'] = 'estadoMesa es requerido y debe ser un numero' . "<br>" . EstadoMesaEnum::imprimirOpciones();
+                        $errors['estadoMesa'] = 'estadoMesa es requerido y debe ser un numero ' . EstadoMesaEnum::imprimirOpciones();
                     }
                     break;
                 default:

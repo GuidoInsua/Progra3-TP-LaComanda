@@ -110,6 +110,7 @@ class PedidoController extends AController implements IController {
             $contenido = json_encode(array("mensaje"=>"Error al eliminar el pedido " . $e->getMessage()));
 
             return $this->setResponse($response, $contenido);
+        }
     }
 }
 

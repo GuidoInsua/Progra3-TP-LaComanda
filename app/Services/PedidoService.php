@@ -94,7 +94,7 @@ class PedidoService extends AService {
     private function verificarPedidoExistente($codigo) {
         try {
             $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM pedido WHERE codigo = :codigo");
-            $consulta->bindValue(':codigo', $codigo, PDO::PARAM_STR);
+            $consulta->bindParam(':codigo', $codigo, PDO::PARAM_STR);
             $consulta->execute();
             $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
 
@@ -110,15 +110,22 @@ class PedidoService extends AService {
 
     private function registrarNuevoPedido($pedido) {
         try {
+
+            $codigo = $pedido->getCodigo();
+            $nombreCliente = $pedido->getNombreCliente();
+            $idMesa = $pedido->getIdMesa();
+            $estadoPedido = $pedido->getEstadoPedido();
+            $fechaCreacion = $pedido->getFechaCreacion();
+
             $consulta = $this->accesoDatos->prepararConsulta("
             INSERT INTO pedido (codigo, nombreCliente, idMesa, estadoPedido, fechaCreacion) 
             VALUES (:codigo, :nombreCliente, :idMesa, :estadoPedido, :fechaCreacion)
             ");
-            $consulta->bindValue(':codigo', $pedido->getCodigo(), PDO::PARAM_STR);
-            $consulta->bindValue(':nombreCliente', $pedido->getNombreCliente(), PDO::PARAM_STR);
-            $consulta->bindValue(':idMesa', $pedido->getIdMesa(), PDO::PARAM_INT);
-            $consulta->bindValue(':estadoPedido', $pedido->getEstadoPedido(), PDO::PARAM_INT);
-            $consulta->bindValue(':fechaCreacion', $pedido->getFechaCreacion(), PDO::PARAM_STR);
+            $consulta->bindParam(':codigo', $codigo, PDO::PARAM_STR);
+            $consulta->bindParam(':nombreCliente', $nombreCliente, PDO::PARAM_STR);
+            $consulta->bindParam(':idMesa', $idMesa, PDO::PARAM_INT);
+            $consulta->bindParam(':estadoPedido', $estadoPedido, PDO::PARAM_INT);
+            $consulta->bindParam(':fechaCreacion', $fechaCreacion, PDO::PARAM_STR);
             $consulta->execute();
         } catch (Exception $e) {
             throw new RuntimeException("Error al registrar el nuevo pedido: " . $e->getMessage());
@@ -143,9 +150,13 @@ class PedidoService extends AService {
 
     private function actualizarEstadoPedido($parametros) {
         try {
+
+            $estadoPedido = $parametros['estadoPedido'];
+            $codigo = $parametros['codigo'];
+
             $actualizacion = $this->accesoDatos->prepararConsulta("UPDATE pedido SET estadoPedido = :estadoPedido WHERE codigo = :codigo");
-            $actualizacion->bindValue(':estadoPedido', $parametros['estadoPedido'], PDO::PARAM_INT);
-            $actualizacion->bindValue(':codigo', $parametros['codigo'], PDO::PARAM_STR);
+            $actualizacion->bindParam(':estadoPedido', $estadoPedido, PDO::PARAM_INT);
+            $actualizacion->bindParam(':codigo', $codigo, PDO::PARAM_STR);
             $actualizacion->execute();
         } catch (Exception $e) {
             throw new RuntimeException("Error al actualizar el estado del pedido: " . $e->getMessage());
@@ -154,10 +165,15 @@ class PedidoService extends AService {
 
     private function darDeBajaPedido($parametros) {
         try {
+
+            $estadoPedido = $parametros['estadoPedido'];
+            $fechaBaja = $parametros['fechaBaja'];
+            $codigo = $parametros['codigo'];
+
             $actualizacion = $this->accesoDatos->prepararConsulta("UPDATE pedido SET estadoPedido = :estadoPedido, fechaBaja = :fechaBaja WHERE codigo = :codigo");
-            $actualizacion->bindValue(':estadoPedido', $parametros['estadoPedido'], PDO::PARAM_INT);
-            $actualizacion->bindValue(':fechaBaja', $parametros['fechaBaja'], PDO::PARAM_STR);
-            $actualizacion->bindValue(':codigo', $parametros['codigo'], PDO::PARAM_STR);
+            $actualizacion->bindParam(':estadoPedido', $estadoPedido, PDO::PARAM_INT);
+            $actualizacion->bindParam(':fechaBaja', $fechaBaja, PDO::PARAM_STR);
+            $actualizacion->bindParam(':codigo', $codigo, PDO::PARAM_STR);
             $actualizacion->execute();
         } catch (Exception $e) {
             throw new RuntimeException("Error al dar de baja el pedido: " . $e->getMessage());
