@@ -23,18 +23,11 @@ class Producto implements JsonSerializable {
     }
 
     public function __construct1(array $data) {
-        $this->_id = $data['id'];
+        $this->_id = empty($data['id']) ? null : $data['id'];
         $this->_precio = $data['precio'];
         $this->_tipo = $data['tipo'];
         $this->_idSector = $data['idSector'];
-        $this->_fechaBaja = $data['fechaBaja'];
-    }
-
-    public function __construct4($precio, $tipo, $idSector, $fechaBaja) {
-        $this->_precio = $precio;
-        $this->_tipo = $tipo;
-        $this->_idSector = $idSector;
-        $this->_fechaBaja = $fechaBaja;
+        $this->_fechaBaja = empty($data['fechaBaja']) ? null : $data['fechaBaja'];
     }
 
     public function jsonSerialize(): mixed {

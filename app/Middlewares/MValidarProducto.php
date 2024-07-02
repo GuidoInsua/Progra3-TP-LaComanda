@@ -5,7 +5,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Response as SlimResponse;
 
-class MValidarPedido {
+class MValidarProducto{
 
     private $paramsToValidate;
 
@@ -47,29 +47,19 @@ class MValidarPedido {
 
         foreach ($this->paramsToValidate as $param) {
             switch ($param) {
-                case 'codigo':
-                    if (empty($data['codigo']) || !is_numeric($data['codigo'])) {
-                        $errors['codigo'] = 'codigo es requerido y debe ser un numero';
+                case 'precio':
+                    if (empty($data['precio']) || !is_numeric($data['precio'])) {
+                        $errors['precio'] = 'precio es requerido y debe ser un numero';
                     }
                     break;
-                case 'nombreCliente':
-                    if (empty($data['nombreCliente']) || !is_string($data['nombreCliente'])) {
-                        $errors['nombreCliente'] = 'nombreCliente es requerido y debe ser un string';
+                case 'tipo':
+                    if (empty($data['tipo']) || !is_string($data['tipo'])) {
+                        $errors['tipo'] = 'tipo es requerido y debe ser un string';
                     }
                     break;
-                case 'idMesa':
-                    if (empty($data['idMesa']) || !is_numeric($data['idMesa'])) {
-                        $errors['idMesa'] = 'idMesa es requerido y debe ser un numero';
-                    }
-                    break;
-                case 'estadoPedido':
-                    if (empty($data['estadoPedido']) || !is_numeric($data['estadoPedido'])) {
-                        $errors['estadoPedido'] = 'estadoPedido es requerido y debe ser un numero';
-                    }
-                    break;
-                case 'tiempoEstimado':
-                    if (empty($data['tiempoEstimado']) || !is_numeric($data['tiempoEstimado'])) {
-                        $errors['tiempoEstimado'] = 'tiempoEstimado es requerido y debe ser un numero';
+                case 'idSector':
+                    if (empty($data['idSector']) || !is_numeric($data['idSector'])) {
+                        $errors['idSector'] = 'idSector es requerido y debe ser un numero';
                     }
                     break;
                 case 'fechaBaja':
@@ -77,18 +67,6 @@ class MValidarPedido {
                         $errors['fechaBaja'] = 'fechaBaja es requerido y debe ser un string';
                     }
                     break;
-                case 'precioFinal':
-                    if (empty($data['precioFinal']) || !is_numeric($data['precioFinal'])) {
-                        $errors['precioFinal'] = 'precioFinal es requerido y debe ser un numero';
-                    }
-                    break;
-                case 'fechaCreacion':
-                    if (empty($data['fechaCreacion']) || !is_string($data['fechaCreacion'])) {
-                        $errors['fechaCreacion'] = 'fechaCreacion es requerido y debe ser un string';
-                    }
-                    break;
-                default:
-                    $errors[$param] = 'Parametro desconocido: ' . $param;
             }
         }
 
