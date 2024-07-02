@@ -54,7 +54,7 @@ class MesaService extends AService {
             $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
 
             if ($resultado) {
-                return new Producto($resultado);
+                return new Mesa($resultado);
             } else {
                 return null;
             }
@@ -69,7 +69,7 @@ class MesaService extends AService {
 
             if ($mesaExistente) {
                 $this->actualizarEstadoMesa($parametros);
-                $mensaje = "Mesa actualizada exitosamente, paso de estado " . $mesaExistente['estadoMesa'] . " a " . $parametros['estadoMesa'];
+                $mensaje = "Mesa actualizada exitosamente, paso de estado " . $parametros['estadoMesa'] . " a " . $parametros['estadoMesa'];
             } else {
                 $mensaje = "La mesa no existe";
             }

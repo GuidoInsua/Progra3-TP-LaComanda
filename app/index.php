@@ -125,7 +125,7 @@ try {
         ->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio']));  
 
       $group->post('/obtenerPorEstado', OrdenController::class . ':mostrarOrdenesPorEstado')
-        ->add(new MValidarOrden("idSector", "estadoOrden"))->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio']));  
+        ->add(new MValidarOrden("estadoOrden"))->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio']));  
            
       $group->post('/obtenerPorEstadoSector', OrdenController::class . ':mostrarOrdenesPorEstadoSector')
         ->add(new MValidarOrden("idSector", "estadoOrden"))->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio']));  
