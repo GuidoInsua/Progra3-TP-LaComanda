@@ -66,6 +66,28 @@ class OrdenService extends AService {
         }
     }
 
+    public function modificarOrden($parametros) {
+        try {
+            $id = $parametros['id'];
+            $estado = $parametros['estadoOrden'];
+            $tiempoEstimado = $parametros['tiempoEstimado'];
+            $idUsuario = $parametros['idUsuario'];
+
+            $consulta = $this->accesoDatos->prepararConsulta("
+            UPDATE relacionpedidoproducto SET estadoOrden = :estado, tiempoEstimado = :tiempoEstimado, idUsuario = :idUsuario 
+            WHERE id = :id
+            ");
+            $consulta->bindParam(':estado', $estado, PDO::PARAM_STR);
+            $consulta->bindParam(':tiempoEstimado', $tiempoEstimado, PDO::PARAM_STR);
+            $consulta->bindParam(':idUsuario', $idUsuario, PDO::PARAM_INT);
+            $consulta->bindParam(':id', $id, PDO::PARAM_INT);
+            $consulta->execute();
+
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al modificar la orden: " . $e->getMessage());
+        }
+    }
+
     public function modificarEstadoOrden($parametros) {
         try {
             $idPedido = $parametros['idPedido'];

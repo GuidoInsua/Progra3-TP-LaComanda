@@ -66,6 +66,20 @@ class OrdenController extends AController{
             return $this->setResponse($response, $contenido);
         }
     }
+
+    public function modificarEstado($request, $response, $args){
+        try {
+            $data = $request->getParsedBody();
+
+            $mensaje = $this->miOrdenService->modificarOrden($data);
+
+            $contenido = json_encode(array("mensaje"=>$mensaje));
+            return $this->setResponse($response, $contenido);
+        } catch (Exception $e) {
+            $contenido = json_encode(array("mensaje"=>"Error " . $e->getMessage()));
+            return $this->setResponse($response, $contenido);
+        }
+    }
 }
 
 

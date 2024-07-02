@@ -84,7 +84,8 @@ try {
     $app->group('/orden', function (RouteCollectorProxy $group) {
       $group->get('/obtenerTodos', OrdenController::class . ':mostrarTodas')->add(new MValidarOrden("idSector", "estadoOrden"))->add(new MAutenticacionPerfil(['Mozo']));  
       $group->post('/obtenerPorEstado', OrdenController::class . ':mostrarOrdenesPorEstado')->add(new MValidarOrden("idSector", "estadoOrden"));    
-      $group->post('/obtenerPorEstadoSector', OrdenController::class . ':mostrarOrdenesPorEstadoSector')->add(new MValidarOrden("idSector", "estadoOrden"));        
+      $group->post('/obtenerPorEstadoSector', OrdenController::class . ':mostrarOrdenesPorEstadoSector')->add(new MValidarOrden("idSector", "estadoOrden"));    
+      $group->put('/modificarEstado', OrdenController::class . ':modificarEstado')->add(new MValidarOrden("id", "estadoOrden", "tiempoEstimado", "idUsuario"));    
     });
 
     $app->post('/login', \LoginController::class . ':loginUsuario')->add(new MValidarLogin());

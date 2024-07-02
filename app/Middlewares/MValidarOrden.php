@@ -50,6 +50,11 @@ class MValidarOrden {
 
         foreach ($this->paramsToValidate as $param) {
             switch ($param) {
+                case 'id':
+                    if (empty($data['id']) || !is_numeric($data['id'])) {
+                        $errors['id'] = 'id es requerido y debe ser un numero';
+                    }
+                    break;
                 case 'estadoOrden':
                     if (empty($data['estadoOrden']) || !is_numeric($data['estadoOrden']) || !EstadoPedidoEnum::fromId((int)$data['estadoOrden'])) {
                         $errors['estadoOrden'] = 'estadoOrden es requerido y debe ser un numero ' . EstadoPedidoEnum::imprimirOpciones();
@@ -60,9 +65,14 @@ class MValidarOrden {
                         $errors['idSector'] = 'idSector es requerido y debe ser un numero ' . SectorEnum::imprimirOpciones();
                     }
                     break;
-                case 'tiepoEstimado':
-                    if (empty($data['tiepoEstimado']) || !is_numeric($data['tiepoEstimado'])) {
-                        $errors['tiepoEstimado'] = 'tiepoEstimado es requerido y debe ser un numero';
+                case 'tiempoEstimado':
+                    if (empty($data['tiempoEstimado']) || !is_numeric($data['tiempoEstimado'])) {
+                        $errors['tiempoEstimado'] = 'tiempoEstimado es requerido y debe ser un numero';
+                    }
+                    break;
+                case 'idUsuario':
+                    if (empty($data['idUsuario']) || !is_numeric($data['idUsuario'])) {
+                        $errors['idUsuario'] = 'idUsuario es requerido y debe ser un numero';
                     }
                     break;
                 default:
