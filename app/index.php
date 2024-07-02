@@ -21,6 +21,7 @@ require_once './Controllers/ProductoController.php';
 require_once './Controllers/UsuarioController.php';
 //Middlewares
 require_once './Middlewares/MValidarMesa.php';
+require_once './Middlewares/MValidarPedido.php';
 
 try {
     // Load ENV
@@ -46,10 +47,10 @@ try {
 
     $app->group('/pedido', function (RouteCollectorProxy $group) {
       $group->get('/obtenerTodos', PedidoController::class . ':getAll');
-      $group->post('/obtenerUno', PedidoController::class . ':get');
-      $group->post('/alta', PedidoController::class . ':add');
-      $group->put('/modificar', PedidoController::class . ':update');
-      $group->put('/baja', PedidoController::class . ':delete');
+      $group->post('/obtenerUno', PedidoController::class . ':get')->add(new MValidarPedido("codigo"));
+      $group->post('/alta', PedidoController::class . ':add')->add(new MValidarPedido("codigo"));
+      $group->put('/modificar', PedidoController::class . ':update')->add(new MValidarPedido("codigo"));
+      $group->put('/baja', PedidoController::class . ':delete')->add(new MValidarPedido("codigo"));
     });
 
     $app->group('/producto', function (RouteCollectorProxy $group) {

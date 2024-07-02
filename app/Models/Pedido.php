@@ -27,26 +27,15 @@ class Pedido implements JsonSerializable {
     }
 
     public function __construct1(array $data) {
-        $this->_id = $data['id'];
-        $this->_codigo = $data['codigo'];
+        $this->_id = empty($data['id']) ? null : $data['id'];
+        $this->_codigo = empty($data['codigo']) ? null : $data['codigo'];
         $this->_nombreCliente = $data['nombreCliente'];
         $this->_idMesa = $data['idMesa'];
-        $this->_estadoPedido = $data['estadoPedido'];
-        $this->_tiempoEstimado = $data['tiempoEstimado'];
-        $this->_fechaBaja = $data['fechaBaja'];
-        $this->_precioFinal = $data['precioFinal'];
-        $this->_fechaCreacion = $data['fechaCreacion'];
-    }
-
-    public function __construct8($codigo, $nombreCliente, $idMesa, $estadoPedido, $tiempoEstimado, $fechaBaja, $precioFinal, $fechaCreacion) {
-        $this->_codigo = $codigo;
-        $this->_nombreCliente = $nombreCliente;
-        $this->_idMesa = $idMesa;
-        $this->_estadoPedido = $estadoPedido;
-        $this->_tiempoEstimado = $tiempoEstimado;
-        $this->_fechaBaja = $fechaBaja;
-        $this->_precioFinal = $precioFinal;
-        $this->_fechaCreacion = $fechaCreacion;
+        $this->_estadoPedido = empty($data['estadoPedido']) ? EstadoPedidoEnum::Pendiente->value : $data['estadoPedido'];
+        $this->_tiempoEstimado = empty($data['tiempoEstimado']) ? null : $data['tiempoEstimado'];
+        $this->_fechaBaja = empty($data['fechaBaja']) ? null : $data['fechaBaja'];
+        $this->_precioFinal = empty($data['precioFinal']) ? null : $data['precioFinal'];
+        $this->_fechaCreacion = empty($data['fechaCreacion']) ? null : $data['fechaCreacion'];
     }
 
     public function jsonSerialize(): mixed {
