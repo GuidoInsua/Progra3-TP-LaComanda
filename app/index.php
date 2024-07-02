@@ -12,12 +12,15 @@ use Slim\Routing\RouteContext;
 use Slim\Factory\AppFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
-
+//Data base
 require_once './DataBase/AccesoDatos.php';
+//Controllers
 require_once './Controllers/MesaController.php';
 require_once './Controllers/PedidoController.php';
 require_once './Controllers/ProductoController.php';
 require_once './Controllers/UsuarioController.php';
+//Middlewares
+require_once './Middlewares/MValidarMesa.php';
 
 try {
     // Load ENV
@@ -35,10 +38,10 @@ try {
 
     $app->group('/mesa', function (RouteCollectorProxy $group) {
         $group->get('/obtenerTodas', MesaController::class . ':getAll');
-        $group->post('/obtenerUna', MesaController::class . ':get');
-        $group->post('/alta', MesaController::class . ':add');
-        $group->put('/modificar', MesaController::class . ':update');
-        $group->put('/baja', MesaController::class . ':delete');
+        $group->post('/obtenerUna', MesaController::class . ':get')->add(new MValidarMesa("codigo"));
+        $group->post('/alta', MesaController::class . ':add')->add(new MValidarMesa("codigo"));
+        $group->put('/modificar', MesaController::class . ':update')->add(new MValidarMesa("codigo", "estadoMesa"));
+        $group->put('/baja', MesaController::class . ':delete')->add(new MValidarMesa("codigo"));
     });
 
     $app->group('/pedido', function (RouteCollectorProxy $group) {
