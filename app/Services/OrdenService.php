@@ -83,6 +83,7 @@ class OrdenService extends AService {
             $consulta->bindParam(':id', $id, PDO::PARAM_INT);
             $consulta->execute();
 
+            return "Orden modificada con éxito";
         } catch (Exception $e) {
             throw new RuntimeException("Error al modificar la orden: " . $e->getMessage());
         }
@@ -173,6 +174,19 @@ class OrdenService extends AService {
             return $ordenes;
         } catch (Exception $e) {
             throw new RuntimeException("Error al obtener los pedidos por producto: " . $e->getMessage());
+        }
+    }
+
+    public function obtenerMaximioTiempoOrdenPorPedido($idPedido) {
+        try {
+            $consulta = $this->accesoDatos->prepararConsulta("SELECT MAX(tiempoEstimado) FROM relacionpedidoproducto WHERE idPedido = :idPedido");
+            $consulta->bindParam(':idPedido', $idPedido, PDO::PARAM_INT);
+            $consulta->execute();
+            $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+    
+            return $resultado['MAX(tiempoEstimado)'];
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al obtener el tiempo estimado máximo de la orden: " . $e->getMessage());
         }
     }
 

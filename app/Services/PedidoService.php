@@ -35,6 +35,9 @@ class PedidoService extends AService {
 
     public function obtenerTodosLosPedidos(): array{
         try {
+            $this->calcularTiempoEstimadoTodosLosProductos();    
+            $this->calcularPrecioFinalTodosLosPedidos();
+
             $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM pedido");
             $consulta->execute();
             $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -238,6 +241,108 @@ class PedidoService extends AService {
             return $productos;
         } catch (Exception $e) {
             throw new RuntimeException("Error al obtener los productos del pedido: " . $e->getMessage());
+        }
+    }
+
+    public function obtenerTiempoEstimadoPorMesa($parametros)
+    {
+        try {
+            $idMesa = $parametros['idMesa'];
+
+            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM pedido WHERE idMesa = :idMesa");
+            $consulta->bindParam(':idMesa', $idMesa, PDO::PARAM_INT);
+            $consulta->execute();
+            $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+
+            if ($resultado) {
+                $pedido = new Pedido($resultado);
+
+                $ordenServie = new OrdenService();
+                $tiempoEstimado = $ordenServie->obtenerMaximioTiempoOrdenPorPedido($pedido->getId());
+
+                $this->actualizarTiempoEstimadoPedido($pedido->getId(), $tiempoEstimado);
+
+                $mensaje = "Tiempo estimado para la mesa: " . $idMesa . " es de " . $tiempoEstimado;
+            } else {
+                $mensaje = "No se encontraron pedidos para la mesa";
+            }
+
+            return $mensaje;
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al obtener el tiempo estimado por mesa: " . $e->getMessage());
+        }
+    }
+
+    public function actualizarTiempoEstimadoPedido($idPedido, $tiempoEstimado) {
+        try {
+            $actualizacion = $this->accesoDatos->prepararConsulta("UPDATE pedido SET tiempoEstimado = :tiempoEstimado WHERE id = :id");
+            $actualizacion->bindParam(':tiempoEstimado', $tiempoEstimado, PDO::PARAM_INT);
+            $actualizacion->bindParam(':id', $idPedido, PDO::PARAM_INT);
+            $actualizacion->execute();
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al actualizar el tiempo estimado del pedido: " . $e->getMessage());
+        }
+    }
+
+    public function calcularTiempoEstimadoTodosLosProductos()
+    {
+        try {
+            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM pedido");
+            $consulta->execute();
+            $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($resultados as $fila) {
+                $pedido = new Pedido($fila);
+
+                $ordenServie = new OrdenService();
+                $tiempoEstimado = $ordenServie->obtenerMaximioTiempoOrdenPorPedido($pedido->getId());
+
+                $this->actualizarTiempoEstimadoPedido($pedido->getId(), $tiempoEstimado);
+            }
+
+            $mensaje = "Tiempo estimado para todos los pedidos actualizado exitosamente";
+            return $mensaje;
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al calcular el tiempo estimado de todos los productos: " . $e->getMessage());
+        }
+    }
+
+    public function calcularPrecioFinalTodosLosPedidos()
+    {
+        try {
+            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM pedido");
+            $consulta->execute();
+            $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($resultados as $fila) {
+                $pedido = new Pedido($fila);
+
+                $productos = $this->obtenerProductosDelPedido($pedido->getId());
+
+                $precioFinal = 0;
+
+                foreach ($productos as $producto) {
+                    $precioFinal += $producto->getPrecio();
+                }
+
+                $this->actualizarPrecioFinalPedido($pedido->getId(), $precioFinal);
+            }
+
+            $mensaje = "Precio final para todos los pedidos actualizado exitosamente";
+            return $mensaje;
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al calcular el precio final de todos los pedidos: " . $e->getMessage());
+        }
+    }
+
+    public function actualizarPrecioFinalPedido($idPedido, $precioFinal) {
+        try {
+            $actualizacion = $this->accesoDatos->prepararConsulta("UPDATE pedido SET precioFinal = :precioFinal WHERE id = :id");
+            $actualizacion->bindParam(':precioFinal', $precioFinal, PDO::PARAM_INT);
+            $actualizacion->bindParam(':id', $idPedido, PDO::PARAM_INT);
+            $actualizacion->execute();
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al actualizar el precio final del pedido: " . $e->getMessage());
         }
     }
 

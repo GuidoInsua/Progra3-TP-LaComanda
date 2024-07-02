@@ -3,31 +3,31 @@
 require_once 'Interfaces/IEnum.php';
 
 enum RolEnum: int implements IEnum{
-    case Bartender = 1;
-    case Cervecero = 2;
-    case Cocinero = 3;
-    case Mozo = 4;
-    case Socio = 5;
+    case bartender = 1;
+    case cervecero = 2;
+    case cocinero = 3;
+    case mozo = 4;
+    case socio = 5;
 
     // Método para obtener el nombre del rol
     public function getNombre(): string {
         return match($this) {
-            self::Bartender => 'Bartender',
-            self::Cervecero => 'Cervecero',
-            self::Cocinero => 'Cocinero',
-            self::Mozo => 'Mozo',
-            self::Socio => 'Socio',
+            self::bartender => 'bartender',
+            self::cervecero => 'cervecero',
+            self::cocinero => 'cocinero',
+            self::mozo => 'mozo',
+            self::socio => 'socio',
         };
     }
 
     // Método para obtener el enum a partir de un id
     public static function fromId(int $id): ?self {
         return match($id) {
-            1 => self::Bartender,
-            2 => self::Cervecero,
-            3 => self::Cocinero,
-            4 => self::Mozo,
-            5 => self::Socio,
+            1 => self::bartender,
+            2 => self::cervecero,
+            3 => self::cocinero,
+            4 => self::mozo,
+            5 => self::socio,
             default => null,
         };
     }

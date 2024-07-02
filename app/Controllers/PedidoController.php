@@ -106,6 +106,23 @@ class PedidoController extends AController implements IController {
             return $this->setResponse($response, $contenido);
         }
     }
+
+    public function obtenerTiempoEstimadoPorMesa($request, $response, $args)
+    {
+        try {
+            $data = $request->getParsedBody();
+
+            $mensajeRespuesta = $this->miPedidoService->obtenerTiempoEstimadoPorMesa($data);
+
+            $contenido = json_encode(array("mensaje"=>$mensajeRespuesta));
+
+            return $this->setResponse($response, $contenido);
+        } catch (Exception $e) {
+            $contenido = json_encode(array("mensaje"=>"Error al consultar el tiempo estimado " . $e->getMessage()));
+
+            return $this->setResponse($response, $contenido);
+        }
+    }
 }
 
 ?>

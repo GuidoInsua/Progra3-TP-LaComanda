@@ -43,7 +43,7 @@ class MValidarPedido {
         $errors = [];
         $expectedParams = count($this->paramsToValidate);
 
-        if (count($data) != $expectedParams + 1) {
+        if (count($data) != $expectedParams) {
             $errors['extraFields'] = 'Numero incorrecto de campos. Se esperan ' . $expectedParams . ' campos.';
         }
 
@@ -87,6 +87,11 @@ class MValidarPedido {
                 case 'fechaCreacion':
                     if (empty($data['fechaCreacion']) || !is_string($data['fechaCreacion'])) {
                         $errors['fechaCreacion'] = 'fechaCreacion es requerido y debe ser un string';
+                    }
+                    break;
+                case 'productos':
+                    if (!isset($data['productos']) || !is_array($data['productos'])) {
+                        $errors['productos'] = 'productos es requerido y debe ser un array';
                     }
                     break;
                 default:
