@@ -6,7 +6,7 @@ class Mesa implements JsonSerializable {
 
     private $_id;
     private $_codigo;
-    private $_estadoMesa; // 1: Esperando Pedido, 2: Comiendo, 3: Pagando, 4: Cerrada
+    private $_estadoMesa; // 1: Esperando Pedido, 2: Comiendo, 3: Pagando, 4: Cerrada, 5: Baja
 
     function __construct(){
         $params = func_get_args();
@@ -21,14 +21,9 @@ class Mesa implements JsonSerializable {
     }
 
     public function __construct1(array $data) {
-        $this->_id = $data['id'];
+        $this->_id = empty($data['id']) ? null : $data['id'];
         $this->_codigo = $data['codigo'];
-        $this->_estadoMesa = $data['estadoMesa'];
-    }
-
-    public function __construct2($codigo, $estadoMesa) {
-        $this->_codigo = $codigo;
-        $this->_estadoMesa = $estadoMesa;
+        $this->_estadoMesa = empty($data['estadoMesa']) ? EstadoMesaEnum::Cerrada->value : $data['estadoMesa'];
     }
 
     public function jsonSerialize(): mixed {

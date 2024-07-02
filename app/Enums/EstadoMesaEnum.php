@@ -5,6 +5,7 @@ enum EstadoMesaEnum: int {
     case Comiendo = 2;
     case Pagando = 3;
     case Cerrada = 4;
+    case Baja = 5;
 
     public function getNombre(): string {
         return match($this) {
@@ -12,6 +13,7 @@ enum EstadoMesaEnum: int {
             self::Comiendo => 'Comiendo',
             self::Pagando => 'Pagando',
             self::Cerrada => 'Cerrada',
+            self::Baja => 'Baja',
         };
     }
 
@@ -21,6 +23,7 @@ enum EstadoMesaEnum: int {
             2 => self::Comiendo,
             3 => self::Pagando,
             4 => self::Cerrada,
+            5 => self::Baja,
             default => null,
         };
     }
