@@ -1,8 +1,10 @@
 <?php
 
 require_once 'Models/Pedido.php';
+require_once 'Models/Producto.php';
 require_once 'Services/AService.php';
 require_once 'Enums/EstadoPedidoEnum.php';
+require_once 'Services/ProductoService.php';
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
@@ -10,14 +12,23 @@ class PedidoService extends AService {
 
     public function altaPedido($parametros) {
         try {
-            $pedido = new Pedido($parametros);
+            $datosPedido = [
+                'nombreCliente' => $parametros['nombreCliente'],
+                'idMesa' => $parametros['idMesa'],
+            ];
+
+            $productos = $parametros['productos'];
+    
+            $pedido = new Pedido($datosPedido);
+
             $pedidoExistente = $this->verificarPedidoExistente($pedido->getCodigo());
 
             if ($pedidoExistente) {
                 $mensaje = "El pedido ya existe";
             } else {
                 $this->GenerarDatosBasicosPedido($pedido);
-                $this->registrarNuevoPedido($pedido);
+                $idPedido = $this->registrarNuevoPedido($pedido);
+                $this->altaRelacionPedidoProducto($idPedido, $productos);
                 $mensaje = "Pedido dado de alta exitosamente";
             }
 
@@ -36,7 +47,15 @@ class PedidoService extends AService {
             $pedidos = [];
 
             foreach ($resultados as $fila) {
-                $pedidos[] = new Pedido($fila);
+                $pedido = new Pedido($fila);
+
+                $productos = $this->obtenerProductosDelPedido($pedido->getId());
+
+                foreach ($productos as $producto) {
+                    $pedido->addProducto($producto);
+                }
+
+                $pedidos[] = $pedido;
             }
 
             return $pedidos;
@@ -127,6 +146,9 @@ class PedidoService extends AService {
             $consulta->bindParam(':estadoPedido', $estadoPedido, PDO::PARAM_INT);
             $consulta->bindParam(':fechaCreacion', $fechaCreacion, PDO::PARAM_STR);
             $consulta->execute();
+
+            $ultimoId = $this->accesoDatos->obtenerUltimoId(); 
+            return $ultimoId;
         } catch (Exception $e) {
             throw new RuntimeException("Error al registrar el nuevo pedido: " . $e->getMessage());
         }
@@ -148,9 +170,32 @@ class PedidoService extends AService {
         }
     }
 
+    public function altaRelacionPedidoProducto($idPedido, $productos) {
+        try {
+            $miProductoService = new ProductoService();
+            foreach ($productos as $producto) {
+                if($nuevoProducto = $miProductoService->obtenerUnProducto($producto)) {
+
+                    $idProducto = $nuevoProducto->getId();
+                    $estadoRelacion = EstadoPedidoEnum::Pendiente->value;  
+
+                    $consulta = $this->accesoDatos->prepararConsulta("
+                    INSERT INTO relacionpedidoproducto (idPedido, idProducto, estadoRelacion) 
+                    VALUES (:idPedido, :idProducto, :estadoRelacion)
+                    ");
+                    $consulta->bindParam(':idPedido', $idPedido, PDO::PARAM_INT);
+                    $consulta->bindParam(':idProducto', $idProducto, PDO::PARAM_INT);
+                    $consulta->bindParam(':estadoRelacion', $estadoRelacion, PDO::PARAM_INT);
+                    $consulta->execute();
+                }
+            }
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al cargar la relación pedido-producto: " . $e->getMessage());
+        }
+    }
+
     private function actualizarEstadoPedido($parametros) {
         try {
-
             $estadoPedido = $parametros['estadoPedido'];
             $codigo = $parametros['codigo'];
 
@@ -165,7 +210,6 @@ class PedidoService extends AService {
 
     private function darDeBajaPedido($parametros) {
         try {
-
             $estadoPedido = $parametros['estadoPedido'];
             $fechaBaja = $parametros['fechaBaja'];
             $codigo = $parametros['codigo'];
@@ -179,6 +223,27 @@ class PedidoService extends AService {
             throw new RuntimeException("Error al dar de baja el pedido: " . $e->getMessage());
         }
     }
+
+    public function obtenerProductosDelPedido($idPedido) {
+        try {
+            $miProductoService = new ProductoService();
+
+            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM relacionpedidoproducto WHERE idPedido = :idPedido");
+            $consulta->bindParam(':idPedido', $idPedido, PDO::PARAM_INT);
+            $consulta->execute();
+            $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($resultados as $fila) {
+                $productos[] = $miProductoService->obtenerProductoPorId($fila['idProducto']);
+            }
+
+            return $productos;
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al obtener los productos del pedido: " . $e->getMessage());
+        }
+    }
+
+
 }
 
 ?>

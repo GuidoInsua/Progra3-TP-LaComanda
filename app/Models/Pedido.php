@@ -13,6 +13,7 @@ class Pedido implements JsonSerializable {
     private $_fechaBaja;
     private $_precioFinal;
     private $_fechaCreacion;
+    private array $_productos = [];
 
     function __construct(){
         $params = func_get_args();
@@ -36,6 +37,7 @@ class Pedido implements JsonSerializable {
         $this->_fechaBaja = empty($data['fechaBaja']) ? null : $data['fechaBaja'];
         $this->_precioFinal = empty($data['precioFinal']) ? null : $data['precioFinal'];
         $this->_fechaCreacion = empty($data['fechaCreacion']) ? null : $data['fechaCreacion'];
+        $this->_productos = empty($data['productos']) ? [] : $data['productos'];
     }
 
     public function jsonSerialize(): mixed {
@@ -48,12 +50,13 @@ class Pedido implements JsonSerializable {
             'tiempoEstimado' => $this->_tiempoEstimado,
             'fechaBaja' => $this->_fechaBaja,
             'precioFinal' => $this->_precioFinal,
-            'fechaCreacion' => $this->_fechaCreacion
+            'fechaCreacion' => $this->_fechaCreacion,
+            'productos' => $this->_productos
         ];
     }
 
     public function imprimirPedido() {
-        echo 
+        echo
         " - ID: " . $this->_id . "<br>" .
         " - Codigo: " . $this->_codigo . "<br>" .
         " - Nombre Cliente: " . $this->_nombreCliente . "<br>" .
@@ -62,7 +65,16 @@ class Pedido implements JsonSerializable {
         " - Tiempo Estimado: " . $this->_tiempoEstimado . "<br>" .
         " - Fecha Baja: " . $this->_fechaBaja . "<br>" .
         " - Precio Final: " . $this->_precioFinal . "<br>" .
-        " - Fecha Creacion: " . $this->_fechaCreacion . "<br> -------------------- <br>";
+        " - Fecha Creacion: " . $this->_fechaCreacion . "<br>" .
+        " - Productos: "  . "<br><br> -------------------- <br>"; ;
+
+        foreach ($this->_productos as $producto) {
+            $producto->imprimirProducto();
+        }
+    }
+
+    public function addProducto($producto) {
+        $this->_productos[] = $producto;
     }
 
     public function getId() {

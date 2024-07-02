@@ -43,7 +43,7 @@ try {
     $app->add(new MLowerCase());
 
     $app->group('/mesa', function (RouteCollectorProxy $group) {
-        $group->get('/obtenerTodas', MesaController::class . ':getAll');
+        $group->get('/obtenerTodas', MesaController::class . ':getAll');                                              //ok
         $group->post('/obtenerUna', MesaController::class . ':get')->add(new MValidarMesa("codigo"));
         $group->post('/alta', MesaController::class . ':add')->add(new MValidarMesa("codigo"));                       //ok
         $group->put('/modificar', MesaController::class . ':update')->add(new MValidarMesa("codigo", "estadoMesa"));
@@ -53,13 +53,13 @@ try {
     $app->group('/pedido', function (RouteCollectorProxy $group) {
       $group->get('/obtenerTodos', PedidoController::class . ':getAll');
       $group->post('/obtenerUno', PedidoController::class . ':get')->add(new MValidarPedido("codigo"));
-      $group->post('/alta', PedidoController::class . ':add')->add(new MValidarPedido("codigo"));
+      $group->post('/alta', PedidoController::class . ':add')->add(new MValidarPedido("nombreCliente", "idMesa"));
       $group->put('/modificar', PedidoController::class . ':update')->add(new MValidarPedido("codigo"));
       $group->put('/baja', PedidoController::class . ':delete')->add(new MValidarPedido("codigo"));
     });
 
     $app->group('/producto', function (RouteCollectorProxy $group) {
-      $group->get('/obtenerTodos', ProductoController::class . ':getAll');
+      $group->get('/obtenerTodos', ProductoController::class . ':getAll');                                                       //ok
       $group->post('/obtenerUno', ProductoController::class . ':get')->add(new MValidarProducto("tipo", "idSector"));
       $group->post('/alta', ProductoController::class . ':add')->add(new MValidarProducto("tipo", "idSector", "precio"));       //ok
       $group->put('/modificar', ProductoController::class . ':update')->add(new MValidarProducto("tipo", "idSector"));
@@ -67,7 +67,7 @@ try {
     });
 
     $app->group('/usuario', function (RouteCollectorProxy $group) {
-      $group->get('/obtenerTodos', UsuarioController::class . ':getAll');
+      $group->get('/obtenerTodos', UsuarioController::class . ':getAll');                                               //ok
       $group->post('/obtenerUno', UsuarioController::class . ':get')->add(new MValidarUsuario("nombre"));
       $group->post('/alta', UsuarioController::class . ':add')->add(new MValidarUsuario("nombre", "clave", "idRol"));  //ok
       $group->put('/modificar', UsuarioController::class . ':update')->add(new MValidarUsuario("nombre"));

@@ -43,7 +43,7 @@ class MValidarPedido {
         $errors = [];
         $expectedParams = count($this->paramsToValidate);
 
-        if (count($data) != $expectedParams) {
+        if (count($data) != $expectedParams + 1) {
             $errors['extraFields'] = 'Numero incorrecto de campos. Se esperan ' . $expectedParams . ' campos.';
         }
 

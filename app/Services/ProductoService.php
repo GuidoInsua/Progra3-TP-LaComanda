@@ -104,6 +104,23 @@ class ProductoService extends AService {
         }
     }
 
+    public function obtenerProductoPorId($id) {
+        try {
+            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM producto WHERE id = :id");
+            $consulta->bindParam(':id', $id, PDO::PARAM_INT);
+            $consulta->execute();
+            $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+
+            if ($resultado) {
+                return new Producto($resultado);
+            } else {
+                return null;
+            }
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al verificar la existencia del producto: " . $e->getMessage());
+        }
+    }
+
     private function registrarNuevoProducto($producto) {
         try {
 
