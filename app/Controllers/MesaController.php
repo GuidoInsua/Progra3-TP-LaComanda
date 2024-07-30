@@ -106,6 +106,44 @@ class MesaController extends AController implements IController {
             return $this->setResponse($response, $contenido);
        }
     }
+
+    public function addFoto($request, $response, $args)
+    {
+        try {
+            $data = $request->getParsedBody();
+            $files = $request->getUploadedFiles();
+
+            $mensajeRespuesta = $this->miMesaService->agregarFotoMesa($data, $files);
+
+            $contenido = json_encode(array("mensaje"=>$mensajeRespuesta));
+
+            return $this->setResponse($response, $contenido);
+        } catch (Exception $e) {
+            $contenido = json_encode(array("mensaje"=>"Error al agregar la foto a la mesa " . $e->getMessage()));
+
+            return $this->setResponse($response, $contenido);
+        }
+    }
+
+    public function obtenerMesaMasUsada($request, $response, $args)
+    {
+        try {
+            $mesa = $this->miMesaService->obtenerMesaMasUsada();
+
+            if ($mesa != null) {
+                $contenido = json_encode(array("Mesa"=>$mesa));
+            }
+            else {
+                $contenido = json_encode(array("mensaje"=>"No se encontro la mesa mas usada"));
+            }
+
+            return $this->setResponse($response, $contenido);
+        } catch (Exception $e) {
+            $contenido = json_encode(array("mensaje"=>"Error al consultar la mesa mas usada " . $e->getMessage()));
+
+            return $this->setResponse($response, $contenido);
+        }
+    }   
 }
 
 ?>

@@ -5,9 +5,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Response as SlimResponse;
 
-require_once 'Enums/EstadoMesaEnum.php';
-
-class MValidarMesa {
+class MValidarEncuesta {
 
     private $paramsToValidate;
 
@@ -19,14 +17,13 @@ class MValidarMesa {
     public function __invoke(Request $request, RequestHandler $handler): Response {
         if (in_array($request->getMethod(), ['POST', 'PUT'])) {
             $data = $request->getParsedBody();
-            $files = $request->getUploadedFiles();
 
             if (empty($data)) {
                 throw new Exception('Error, No se recibieron datos');
             }
 
             // Validar los datos según las opciones configuradas
-            $errors = $this->validate($data, $files);
+            $errors = $this->validate($data);
 
             if (!empty($errors)) {
                 // Si hay errores, devolver una respuesta con código 400 y los errores
@@ -40,29 +37,34 @@ class MValidarMesa {
         return $handler->handle($request);
     }
 
-    private function validate($data, $files): array {
+    private function validate($data): array {
         $errors = [];
         $expectedParams = count($this->paramsToValidate);
 
-        if ((count($data) + count($files))!= $expectedParams) {
+        if ((count($data))!= $expectedParams) {
             $errors['extraFields'] = 'Numero incorrecto de campos. Se esperan ' . $expectedParams . ' campos.';
         }
 
         foreach ($this->paramsToValidate as $param) {
             switch ($param) {
-                case 'codigo':
-                    if (empty($data['codigo']) || !is_numeric($data['codigo'])) {
-                        $errors['codigo'] = 'codigo es requerido y debe ser un numero';
+                case 'idMesa':
+                    if (empty($data['idMesa']) || !is_numeric($data['idMesa'])) {
+                        $errors['idMesa'] = 'idMesa es requerido y debe ser un numero';
                     }
                     break;
-                case 'estadoMesa':
-                    if (empty($data['estadoMesa']) || !is_numeric($data['estadoMesa']) || !EstadoMesaEnum::fromId((int)$data['estadoMesa'])) {
-                        $errors['estadoMesa'] = 'estadoMesa es requerido y debe ser un numero ' . EstadoMesaEnum::imprimirOpciones();
+                case 'codigoPedido':
+                    if (empty($data['codigoPedido'])) {
+                        $errors['codigoPedido'] = 'codigoPedido es requerido';
                     }
                     break;
-                case 'imagen':
-                    if (!isset($files['imagen']) || !$this->validarImagen($files['imagen'])) {
-                        $errors['imagen'] = 'Imagen invalida o error en la carga';
+                case 'puntuacion':
+                    if (empty($data['puntuacion']) || !is_numeric($data['puntuacion']) || $data['puntuacion'] < 1 || $data['puntuacion'] > 10) {
+                        $errors['puntuacion'] = 'puntuacion es requerido y debe ser un nuermo entre 1 y 10 ';
+                    }
+                    break;
+                case 'comentario':
+                    if (empty($data['comentario']) || !is_string($data['comentario'])) {
+                        $errors['comentario'] = 'comentario es requerido y debe ser un string';
                     }
                     break;
                 default:

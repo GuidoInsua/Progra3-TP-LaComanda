@@ -177,6 +177,23 @@ class OrdenService extends AService {
         }
     }
 
+    public function obtenerOrdenesPorPedido($idPedido): array {
+        try {
+            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM relacionpedidoproducto WHERE idPedido = :idPedido");
+            $consulta->bindParam(':idPedido', $idPedido, PDO::PARAM_INT);
+            $consulta->execute();
+            $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
+    
+            $ordenes = [];
+            foreach ($resultados as $fila) {
+                $ordenes[] = new Orden($fila);
+            }
+            return $ordenes;
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al obtener las ordenes por pedido: " . $e->getMessage());
+        }
+    }
+
     public function obtenerMaximioTiempoOrdenPorPedido($idPedido) {
         try {
             $consulta = $this->accesoDatos->prepararConsulta("SELECT MAX(tiempoEstimado) FROM relacionpedidoproducto WHERE idPedido = :idPedido");

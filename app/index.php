@@ -21,6 +21,7 @@ require_once './Controllers/ProductoController.php';
 require_once './Controllers/UsuarioController.php';
 require_once './Controllers/OrdenController.php';
 require_once './Controllers/LoginController.php';
+require_once './Controllers/EncuestaController.php';
 //Middlewares
 require_once './Middlewares/MValidarMesa.php';
 require_once './Middlewares/MValidarPedido.php';
@@ -28,6 +29,7 @@ require_once './Middlewares/MValidarProducto.php';
 require_once './Middlewares/MValidarUsuario.php';
 require_once './Middlewares/MValidarOrden.php';
 require_once './Middlewares/MLowerCase.php';
+require_once './Middlewares/MValidarEncuesta.php';
 //Autenticacion
 require_once './Middlewares/MValidarLogin.php';
 require_once './Middlewares/MAutenticacionToken.php';
@@ -51,7 +53,7 @@ try {
 
     $app->group('/mesa', function (RouteCollectorProxy $group) {
         $group->get('/obtenerTodas', MesaController::class . ':getAll')
-        ->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio']));   
+          ->add(new MAutenticacionPerfil(['socio']));   //
 
         $group->post('/obtenerUna', MesaController::class . ':get')
           ->add(new MValidarMesa("codigo"))->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio']));  
@@ -60,21 +62,27 @@ try {
           ->add(new MValidarMesa("codigo"))->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio']));  
 
         $group->put('/modificar', MesaController::class . ':update')
-          ->add(new MValidarMesa("codigo", "estadoMesa"))->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio'])); 
+          ->add(new MValidarMesa("codigo", "estadoMesa"))->add(new MAutenticacionPerfil(['mozo', 'socio']));  //
 
         $group->put('/baja', MesaController::class . ':delete')
-          ->add(new MValidarMesa("codigo"))->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio']));  
+          ->add(new MValidarMesa("codigo"))->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio'])); 
+          
+        $group->post('/altaFoto', MesaController::class . ':addFoto')
+          ->add(new MValidarMesa("codigo", "imagen"))->add(new MAutenticacionPerfil(['mozo']));  //
+
+        $group->get('/mesaMasUsada', MesaController::class . ':obtenerMesaMasUsada')
+          ->add(new MAutenticacionPerfil(['socio']));   //
     });
 
     $app->group('/pedido', function (RouteCollectorProxy $group) {
       $group->get('/obtenerTodos', PedidoController::class . ':getAll')
-        ->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio']));  
+        ->add(new MAutenticacionPerfil(['socio']));  
 
       $group->post('/obtenerUno', PedidoController::class . ':get')
-        ->add(new MValidarPedido("codigo"))->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio']));  
+        ->add(new MValidarPedido("codigo"))->add(new MAutenticacionPerfil(['socio']));  
 
       $group->post('/alta', PedidoController::class . ':add')
-        ->add(new MValidarPedido("nombreCliente", "idMesa", "productos"))->add(new MAutenticacionPerfil(['Mozo']));
+        ->add(new MValidarPedido("nombreCliente", "idMesa", "productos"))->add(new MAutenticacionPerfil(['mozo'])); //
 
       $group->put('/modificar', PedidoController::class . ':update')
         ->add(new MValidarPedido("codigo"))->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio']));
@@ -83,7 +91,13 @@ try {
         ->add(new MValidarPedido("codigo"))->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio'])); 
         
       $group->post('/obtenerTiempoEstimado', PedidoController::class . ':obtenerTiempoEstimadoPorMesa')
-        ->add(new MValidarPedido("idMesa"));
+        ->add(new MValidarPedido("idMesa", "codigo"));      //
+
+      $group->get('/obtenerPedidosParaServir', PedidoController::class . ':obtenerPedidosParaServir')
+        ->add(new MAutenticacionPerfil(['mozo']));  //
+
+      $group->get('/pedidosFueraDeTiempo', PedidoController::class . ':obtenerPedidosFueraDeTiempo')
+        ->add(new MAutenticacionPerfil(['socio']));  //
     });
 
     $app->group('/producto', function (RouteCollectorProxy $group) {
@@ -105,7 +119,7 @@ try {
 
     $app->group('/usuario', function (RouteCollectorProxy $group) {
       $group->get('/obtenerTodos', UsuarioController::class . ':getAll')
-        ->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio']));  
+        ->add(new MAutenticacionPerfil(['socio']));  
 
       $group->post('/obtenerUno', UsuarioController::class . ':get')
         ->add(new MValidarUsuario("nombre"))->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio']));  
@@ -128,13 +142,23 @@ try {
         ->add(new MValidarOrden("estadoOrden"))->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio']));  
            
       $group->post('/obtenerPorEstadoSector', OrdenController::class . ':mostrarOrdenesPorEstadoSector')
-        ->add(new MValidarOrden("idSector", "estadoOrden"))->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio']));  
+        ->add(new MValidarOrden("idSector", "estadoOrden"))->add(new MAutenticacionPerfil(['cocinero', 'bartender', 'cervecero']));  //
          
       $group->put('/modificarEstado', OrdenController::class . ':modificarEstado')
-        ->add(new MValidarOrden("id", "estadoOrden", "tiempoEstimado", "idUsuario"))->add(new MAutenticacionPerfil(['mozo', 'cocinero', 'bartender', 'cervecero', 'socio'])); 
+        ->add(new MValidarOrden("id", "estadoOrden", "tiempoEstimado", "idUsuario"))->add(new MAutenticacionPerfil(['cocinero', 'bartender', 'cervecero'])); //
+    });
+
+    $app->group('/encuesta', function (RouteCollectorProxy $group) {
+      $group->post('/subirEncuesta', EncuestaController::class . ':add')
+        ->add(new MValidarEncuesta("idMesa", "codigoPedido", "puntuacion", "comentario"));  //
+
+      $group->get('/obtenerMejoresComentarios', EncuestaController::class . ':obtenerMejoresComentarios')
+        ->add(new MAutenticacionPerfil(['socio'])); //
     });
 
     $app->post('/login', \LoginController::class . ':loginUsuario')->add(new MValidarLogin());
+
+    $app->get('/descargarLogoPdf', \EncuestaController::class . ':descargarLogoPdf')->add(new MAutenticacionPerfil(['socio']));
 
     $app->run();
 } 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 02, 2024 at 01:34 PM
+-- Generation Time: Jul 30, 2024 at 10:42 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,6 +24,27 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `encuesta`
+--
+
+CREATE TABLE `encuesta` (
+  `id` int(11) NOT NULL,
+  `idMesa` int(11) NOT NULL,
+  `codigoPedido` varchar(10) NOT NULL,
+  `puntuacion` int(2) NOT NULL,
+  `comentario` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `encuesta`
+--
+
+INSERT INTO `encuesta` (`id`, `idMesa`, `codigoPedido`, `puntuacion`, `comentario`) VALUES
+(1, 3, '77de6182a8', 6, 'muy rico');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `mesa`
 --
 
@@ -38,11 +59,11 @@ CREATE TABLE `mesa` (
 --
 
 INSERT INTO `mesa` (`id`, `codigo`, `estadoMesa`) VALUES
-(1, '1', '4'),
+(1, '1', '3'),
 (2, '2', '4'),
 (3, '3', '4'),
 (4, '4', '4'),
-(5, '5', '4');
+(5, '5', '2');
 
 -- --------------------------------------------------------
 
@@ -57,7 +78,7 @@ CREATE TABLE `pedido` (
   `idMesa` int(11) DEFAULT NULL,
   `estadoPedido` varchar(50) NOT NULL,
   `tiempoEstimado` time DEFAULT NULL,
-  `fechaBaja` date DEFAULT NULL,
+  `fechaBaja` datetime DEFAULT NULL,
   `precioFinal` decimal(10,2) DEFAULT NULL,
   `fechaCreacion` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -67,7 +88,10 @@ CREATE TABLE `pedido` (
 --
 
 INSERT INTO `pedido` (`id`, `codigo`, `nombreCliente`, `idMesa`, `estadoPedido`, `tiempoEstimado`, `fechaBaja`, `precioFinal`, `fechaCreacion`) VALUES
-(10, '3c4e5e4f1b', 'Luna', 5, '1', NULL, NULL, NULL, '2024-07-02 08:30:33');
+(10, '3c4e5e4f1b', 'Luna', 5, '5', '00:15:00', '2024-07-30 17:04:04', 18500.00, '2024-07-02 08:30:33'),
+(11, 'bb5c3923b4', 'juan', 4, '1', '00:20:00', NULL, 18500.00, '2024-07-02 17:50:40'),
+(12, '77de6182a8', 'agustin', 3, '4', NULL, NULL, 18500.00, '2024-07-02 22:49:00'),
+(13, '8e20b249ba', 'Guido', 3, '1', NULL, NULL, 18500.00, '2024-07-30 12:41:54');
 
 -- --------------------------------------------------------
 
@@ -117,11 +141,26 @@ CREATE TABLE `relacionpedidoproducto` (
 --
 
 INSERT INTO `relacionpedidoproducto` (`id`, `idPedido`, `idProducto`, `idUsuario`, `estadoOrden`, `tiempoEstimado`) VALUES
-(12, 10, 9, NULL, 1, NULL),
-(13, 10, 10, NULL, 1, NULL),
-(14, 10, 10, NULL, 1, NULL),
-(15, 10, 11, NULL, 1, NULL),
-(16, 10, 12, NULL, 1, NULL);
+(12, 10, 9, 2, 3, '00:00:01'),
+(13, 10, 10, NULL, 3, NULL),
+(14, 10, 10, NULL, 3, NULL),
+(15, 10, 11, 4, 3, '00:15:00'),
+(16, 10, 12, 5, 3, '00:15:00'),
+(17, 11, 9, 2, 2, '00:10:00'),
+(18, 11, 10, 2, 2, '00:20:00'),
+(19, 11, 10, 2, 2, '00:15:00'),
+(20, 11, 11, NULL, 1, NULL),
+(21, 11, 12, NULL, 1, NULL),
+(22, 12, 9, NULL, 1, NULL),
+(23, 12, 10, NULL, 1, NULL),
+(24, 12, 10, NULL, 1, NULL),
+(25, 12, 11, NULL, 1, NULL),
+(26, 12, 12, NULL, 1, NULL),
+(27, 13, 9, NULL, 1, NULL),
+(28, 13, 10, NULL, 1, NULL),
+(29, 13, 10, NULL, 1, NULL),
+(30, 13, 11, NULL, 1, NULL),
+(31, 13, 12, NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -139,11 +178,11 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `nombre`) VALUES
-(1, 'Bartender'),
-(2, 'Cervecero'),
-(3, 'Cocinero'),
-(4, 'Mozo'),
-(5, 'Socio');
+(1, 'bartender'),
+(2, 'cervecero'),
+(3, 'cocinero'),
+(4, 'mozo'),
+(5, 'socio');
 
 -- --------------------------------------------------------
 
@@ -196,6 +235,12 @@ INSERT INTO `usuario` (`id`, `nombre`, `clave`, `idRol`, `fechaBaja`, `fechaAlta
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `encuesta`
+--
+ALTER TABLE `encuesta`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `mesa`
@@ -257,6 +302,12 @@ ALTER TABLE `usuario`
 --
 
 --
+-- AUTO_INCREMENT for table `encuesta`
+--
+ALTER TABLE `encuesta`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `mesa`
 --
 ALTER TABLE `mesa`
@@ -266,7 +317,7 @@ ALTER TABLE `mesa`
 -- AUTO_INCREMENT for table `pedido`
 --
 ALTER TABLE `pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `producto`
@@ -278,7 +329,7 @@ ALTER TABLE `producto`
 -- AUTO_INCREMENT for table `relacionpedidoproducto`
 --
 ALTER TABLE `relacionpedidoproducto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `roles`

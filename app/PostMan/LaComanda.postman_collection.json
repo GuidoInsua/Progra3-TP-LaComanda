@@ -12,6 +12,16 @@
 				{
 					"name": "TodosUsuarios",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_socio}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -54,6 +64,16 @@
 				{
 					"name": "TodosMesas",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MTk5NTU5MzQsImV4cCI6MTcyMDAxNTkzNCwiYXVkIjoiZjgwZmFmZDQwOTMyY2VkYTM0YTQ5YjEyYzg1NjZkZDAzZjhlNjNjNyIsImRhdGEiOnsicm9sIjo0fSwiYXBwIjoiVGVzdCBKV1QifQ.6ci0yIY5lZhhhQPX92kCQy8i67tC7xA6WmqLES4OaWM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -75,6 +95,16 @@
 				{
 					"name": "TodosPedidos",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MTk5NTQyNTYsImV4cCI6MTcyMDAxNDI1NiwiYXVkIjoiZjgwZmFmZDQwOTMyY2VkYTM0YTQ5YjEyYzg1NjZkZDAzZjhlNjNjNyIsImRhdGEiOnsicm9sIjo0fSwiYXBwIjoiVGVzdCBKV1QifQ.H8v6fWqrcZJ2XY0vXfZULw4jELJunkSHuNZzGn29XKI",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -134,6 +164,16 @@
 				{
 					"name": "OrdenesPorEstado",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MTk5NTU2MjgsImV4cCI6MTcyMDAxNTYyOCwiYXVkIjoiZjgwZmFmZDQwOTMyY2VkYTM0YTQ5YjEyYzg1NjZkZDAzZjhlNjNjNyIsImRhdGEiOnsicm9sIjo0fSwiYXBwIjoiVGVzdCBKV1QifQ.Joz_rxOE7VTnpWq0-_8xZtGojq_t9TWEQ8Bw_vy-zgo",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -141,7 +181,7 @@
 							"formdata": [
 								{
 									"key": "estadoOrden",
-									"value": "1",
+									"value": "2",
 									"type": "text"
 								}
 							]
@@ -167,6 +207,21 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "estadoOrden",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "idSector",
+									"value": "0",
+									"type": "text"
+								}
+							]
+						},
 						"url": {
 							"raw": "http://localhost:666/app/orden/obtenerPorEstadoSector",
 							"protocol": "http",
@@ -239,17 +294,17 @@
 							"formdata": [
 								{
 									"key": "tipo",
-									"value": "torta",
+									"value": "daikiri",
 									"type": "text"
 								},
 								{
 									"key": "idSector",
-									"value": "4",
+									"value": "1",
 									"type": "text"
 								},
 								{
 									"key": "precio",
-									"value": "2000",
+									"value": "2500",
 									"type": "text"
 								}
 							]
@@ -304,11 +359,21 @@
 				{
 					"name": "AltaPedido",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_mozo}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nombreCliente\": \"juan\",\r\n    \"idMesa\": 4,\r\n    \"productos\": [\r\n        {\r\n            \"tipo\": \"milanesa a caballo\"\r\n        },\r\n        {\r\n            \"tipo\": \"hamburguesa de garbanzo\"\r\n        },\r\n        {\r\n            \"tipo\": \"hamburguesa de garbanzo\"\r\n        },\r\n        {\r\n            \"tipo\": \"corona\"\r\n        },\r\n        {\r\n            \"tipo\": \"daikiri\"\r\n        }\r\n    ]\r\n}\r\n",
+							"raw": "{\r\n    \"nombreCliente\": \"agustin\",\r\n    \"idMesa\": 3,\r\n    \"productos\": [\r\n        {\r\n            \"tipo\": \"milanesa a caballo\"\r\n        },\r\n        {\r\n            \"tipo\": \"hamburguesa de garbanzo\"\r\n        },\r\n        {\r\n            \"tipo\": \"hamburguesa de garbanzo\"\r\n        },\r\n        {\r\n            \"tipo\": \"corona\"\r\n        },\r\n        {\r\n            \"tipo\": \"daikiri\"\r\n        }\r\n    ]\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -428,8 +493,1086 @@
 				{
 					"name": "tiempoEstimadoMesa",
 					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "idMesa",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "codigo",
+									"value": "77de6182a8",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/pedido/obtenerTiempoEstimado",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"pedido",
+								"obtenerTiempoEstimado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subirEncuesta",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "idMesa",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "codigoPedido",
+									"value": "77de6182a8",
+									"type": "text"
+								},
+								{
+									"key": "puntuacion",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "comentario",
+									"value": "Muy rico",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/encuesta/subirEncuesta",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"encuesta",
+								"subirEncuesta"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Mozo",
+			"item": [
+				{
+					"name": "TomarPedido",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_mozo}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombreCliente\": \"Guido\",\r\n    \"idMesa\": 3,\r\n    \"productos\": [\r\n        {\r\n            \"tipo\": \"milanesa a caballo\"\r\n        },\r\n        {\r\n            \"tipo\": \"hamburguesa de garbanzo\"\r\n        },\r\n        {\r\n            \"tipo\": \"hamburguesa de garbanzo\"\r\n        },\r\n        {\r\n            \"tipo\": \"corona\"\r\n        },\r\n        {\r\n            \"tipo\": \"daikiri\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:666/app/pedido/alta",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"pedido",
+								"alta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TomarFoto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_mozo}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "codigo",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "imagen",
+									"type": "file",
+									"src": "/C:/xampp/htdocs/Progra3-TP-LaComanda/ImagenesEjemplo/mesa 1.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/mesa/altaFoto",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"mesa",
+								"altaFoto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obtenerPedidosParaServir",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_mozo}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/pedido/obtenerPedidosParaServir",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"pedido",
+								"obtenerPedidosParaServir"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ModificarEstadoMesaComiendo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_mozo}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"codigo\": 5,\r\n    \"estadoMesa\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:666/app/mesa/modificar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"mesa",
+								"modificar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ModificarEstadoMesaPagando",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_mozo}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"codigo\": 5,\r\n    \"estadoMesa\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:666/app/mesa/modificar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"mesa",
+								"modificar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bartender",
+			"item": [
+				{
+					"name": "ListarProductosPendientes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_bartender}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "estadoOrden",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "idSector",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/orden/obtenerPorEstadoSector",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"orden",
+								"obtenerPorEstadoSector"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modificarEstadoOrdenEnPreparacion",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_bartender}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 16,\r\n  \"estadoOrden\": 2,\r\n  \"tiempoEstimado\": 1500,\r\n  \"idUsuario\" : 5\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:666/app/orden/modificarEstado",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"orden",
+								"modificarEstado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListarProductosEnPreparacion",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_bartender}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "estadoOrden",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "idSector",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/orden/obtenerPorEstadoSector",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"orden",
+								"obtenerPorEstadoSector"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modificarEstadoOrdenListoServir",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_bartender}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 16,\r\n  \"estadoOrden\": 3,\r\n  \"tiempoEstimado\": 1500,\r\n  \"idUsuario\" : 5\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:666/app/orden/modificarEstado",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"orden",
+								"modificarEstado"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cervecero",
+			"item": [
+				{
+					"name": "ListarProductosPendientes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_cervezero}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "estadoOrden",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "idSector",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/orden/obtenerPorEstadoSector",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"orden",
+								"obtenerPorEstadoSector"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modificarEstadoOrdenEnPreparacion",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_cervezero}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 15,\r\n  \"estadoOrden\": 2,\r\n  \"tiempoEstimado\": 1500,\r\n  \"idUsuario\" : 4\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:666/app/orden/modificarEstado",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"orden",
+								"modificarEstado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListarProductosEnPreparacion",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_cervezero}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "estadoOrden",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "idSector",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/orden/obtenerPorEstadoSector",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"orden",
+								"obtenerPorEstadoSector"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modificarEstadoOrdenListoServir",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_cervezero}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 15,\r\n  \"estadoOrden\": 3,\r\n  \"tiempoEstimado\": 1500,\r\n  \"idUsuario\" : 4\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:666/app/orden/modificarEstado",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"orden",
+								"modificarEstado"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cocinero",
+			"item": [
+				{
+					"name": "ListarProductosPendientes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_cocinero}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "estadoOrden",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "idSector",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/orden/obtenerPorEstadoSector",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"orden",
+								"obtenerPorEstadoSector"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modificarEstadoOrdenEnPreparacion",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_cocinero}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 22,\r\n  \"estadoOrden\": 2,\r\n  \"tiempoEstimado\": 1500,\r\n  \"idUsuario\" : 3\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:666/app/orden/modificarEstado",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"orden",
+								"modificarEstado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListarProductosEnPreparacion",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_cocinero}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "estadoOrden",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "idSector",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/orden/obtenerPorEstadoSector",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"orden",
+								"obtenerPorEstadoSector"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "modificarEstadoOrdenListoServir",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_cocinero}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 22,\r\n  \"estadoOrden\": 3,\r\n  \"tiempoEstimado\": 1500,\r\n  \"idUsuario\" : 3\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:666/app/orden/modificarEstado",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"orden",
+								"modificarEstado"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Socio",
+			"item": [
+				{
+					"name": "TodosPedidos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_socio}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/pedido/obtenerTodos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"pedido",
+								"obtenerTodos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ObtenerUnPedido",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_socio}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "codigo",
+									"value": "3c4e5e4f1b",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/app/pedido/obtenerUno",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"pedido",
+								"obtenerUno"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TodasLasMesas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_socio}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/mesa/obtenerTodas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"mesa",
+								"obtenerTodas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ModificarEstadoMesaCerrada",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_socio}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"codigo\": 5,\r\n    \"estadoMesa\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:666/app/mesa/modificar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"mesa",
+								"modificar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ObtenerMejoresEncuestas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_socio}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/encuesta/obtenerMejoresComentarios",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"encuesta",
+								"obtenerMejoresComentarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ObtenerMesaMasUsada",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_socio}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/mesa/mesaMasUsada",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"mesa",
+								"mesaMasUsada"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PedidosFueraDeTiempo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_socio}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/pedido/pedidosFueraDeTiempo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"pedido",
+								"pedidosFueraDeTiempo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token_socio}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/app/descargarLogoPdf",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"app",
+								"descargarLogoPdf"
+							]
+						}
 					},
 					"response": []
 				}
@@ -437,11 +1580,39 @@
 		},
 		{
 			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();\r",
+							"pm.environment.set(\"token_mozo\", response.mensaje.jwt);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "nombre",
+							"value": "mili",
+							"type": "text"
+						},
+						{
+							"key": "clave",
+							"value": "1234",
+							"type": "text"
+						}
+					]
+				},
 				"url": {
-					"raw": "http://localhost:666/app/orden/obtenerTodos",
+					"raw": "http://localhost:666/app/login",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -449,8 +1620,7 @@
 					"port": "666",
 					"path": [
 						"app",
-						"orden",
-						"obtenerTodos"
+						"login"
 					]
 				}
 			},

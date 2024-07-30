@@ -62,6 +62,10 @@ class PedidoService extends AService {
 
     public function obtenerUnPedido($parametros): ?Pedido {
         try {
+            $this->calcularTiempoEstimadoTodosLosProductos();    
+            $this->calcularPrecioFinalTodosLosPedidos();
+            $this->actualizarPedidosEnListoParaServir();
+
             $pedidoExistente = $this->obtenerPedidoBasePorCodigo($parametros['codigo']);
 
             $productos = $this->obtenerProductosDelPedido($pedidoExistente->getId());
@@ -195,7 +199,7 @@ class PedidoService extends AService {
         }
     }
 
-    private function actualizarEstadoPedido($parametros) {
+    public function actualizarEstadoPedido($parametros) {
         try {
             $estadoPedido = $parametros['estadoPedido'];
             $codigo = $parametros['codigo'];
@@ -204,6 +208,14 @@ class PedidoService extends AService {
             $actualizacion->bindParam(':estadoPedido', $estadoPedido, PDO::PARAM_INT);
             $actualizacion->bindParam(':codigo', $codigo, PDO::PARAM_STR);
             $actualizacion->execute();
+
+            if($estadoPedido == EstadoPedidoEnum::Entregado->value){
+                $fechaBaja = date('Y-m-d H:i:s');
+                $actualizacion = $this->accesoDatos->prepararConsulta("UPDATE pedido SET fechaBaja = :fechaBaja WHERE codigo = :codigo");
+                $actualizacion->bindParam(':fechaBaja', $fechaBaja, PDO::PARAM_STR);
+                $actualizacion->bindParam(':codigo', $codigo, PDO::PARAM_STR);
+                $actualizacion->execute();
+            }
         } catch (Exception $e) {
             throw new RuntimeException("Error al actualizar el estado del pedido: " . $e->getMessage());
         }
@@ -248,9 +260,11 @@ class PedidoService extends AService {
     {
         try {
             $idMesa = $parametros['idMesa'];
+            $codigo = $parametros['codigo'];
 
-            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM pedido WHERE idMesa = :idMesa");
+            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM pedido WHERE idMesa = :idMesa AND codigo = :codigo");
             $consulta->bindParam(':idMesa', $idMesa, PDO::PARAM_INT);
+            $consulta->bindParam(':codigo', $codigo, PDO::PARAM_STR);
             $consulta->execute();
             $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
 
@@ -262,7 +276,12 @@ class PedidoService extends AService {
 
                 $this->actualizarTiempoEstimadoPedido($pedido->getId(), $tiempoEstimado);
 
+                if($tiempoEstimado != null) {
                 $mensaje = "Tiempo estimado para la mesa: " . $idMesa . " es de " . $tiempoEstimado;
+                }
+                else {
+                    $mensaje = "No se le asigno un tiempo al pedido";
+                }
             } else {
                 $mensaje = "No se encontraron pedidos para la mesa";
             }
@@ -343,6 +362,102 @@ class PedidoService extends AService {
             $actualizacion->execute();
         } catch (Exception $e) {
             throw new RuntimeException("Error al actualizar el precio final del pedido: " . $e->getMessage());
+        }
+    }
+
+    public function obtenerPedidosParaServir() {
+        try {
+            $this->calcularTiempoEstimadoTodosLosProductos();    
+            $this->calcularPrecioFinalTodosLosPedidos();
+            $this->actualizarPedidosEnListoParaServir();
+
+            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM pedido WHERE estadoPedido = 3");
+            $consulta->execute();
+            $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($resultados as $fila) {
+                $pedido = new Pedido($fila);
+
+                $productos = $this->obtenerProductosDelPedido($pedido->getId());
+
+                foreach ($productos as $producto) {
+                    $pedido->addProducto($producto);
+                }
+
+                $pedidos[] = $pedido;
+            }
+
+            if($resultados != null) {
+                return $pedidos;
+            }
+            else
+            {
+                return NULL;
+            }
+            
+            
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al obtener los pedidos listos para servir: " . $e->getMessage());
+        }
+    }
+
+    public function actualizarPedidosEnListoParaServir() {
+        try {
+            $pedidos = $this->obtenerTodosLosPedidos();
+            $ordenServie = new OrdenService();
+
+            foreach($pedidos as $pedido) {
+                $ordenes = $ordenServie->obtenerOrdenesPorPedido($pedido->getId());
+
+                $todosListos = true;
+                foreach($ordenes as $orden) {
+                    if($orden->getEstadoOrden() != EstadoPedidoEnum::ListoParaServir->value) {
+                        $todosListos = false;
+                    }
+                }
+
+                if($todosListos) {
+                    $this->actualizarEstadoPedido(['codigo' => $pedido->getCodigo(), 'estadoPedido' => EstadoPedidoEnum::ListoParaServir->value]);
+                }
+            }
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al obtener los pedidos listos para servir: " . $e->getMessage());
+        }
+    }
+
+    public function obtenerPedidosFueraDeTiempo()
+    {
+        try {
+            $consulta = $this->accesoDatos->prepararConsulta("SELECT * FROM pedido WHERE estadoPedido = 5");
+            $consulta->execute();
+            $resultados = $consulta->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($resultados as $fila) {
+                $pedido = new Pedido($fila);
+
+                $tiempoEstimado = $pedido->getTiempoEstimado();
+                $fechaCreacion = $pedido->getFechaCreacion();
+                $fechaBaja = $pedido->getFechaBaja();
+
+                $fechaCreacion = new DateTime($fechaCreacion);
+                $fechaBaja = new DateTime($fechaBaja);
+
+                $interval = $fechaCreacion->diff($fechaBaja);
+
+                if($interval->format('%i') > $tiempoEstimado) {
+                    $pedidos[] = $pedido;
+                }
+            }
+
+            if($resultados != null) {
+                return $pedidos;
+            }
+            else
+            {
+                return NULL;
+            }
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al obtener los pedidos fuera de tiempo: " . $e->getMessage());
         }
     }
 

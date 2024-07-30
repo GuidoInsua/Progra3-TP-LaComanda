@@ -7,6 +7,7 @@ enum EstadoPedidoEnum: int implements IEnum{
     case EnPreparacion = 2;
     case ListoParaServir = 3;
     case Cancelado = 4;
+    case Entregado = 5;
 
     public function getNombre(): string {
         return match($this) {
@@ -14,6 +15,7 @@ enum EstadoPedidoEnum: int implements IEnum{
             self::EnPreparacion => 'En Preparación',
             self::ListoParaServir => 'Listo Para Servir',
             self::Cancelado => 'Cancelado',
+            self::Entregado => 'Entregado',
         };
     }
 
@@ -23,6 +25,7 @@ enum EstadoPedidoEnum: int implements IEnum{
             2 => self::EnPreparacion,
             3 => self::ListoParaServir,
             4 => self::Cancelado,
+            5 => self::Entregado,
             default => null,
         };
     }

@@ -123,6 +123,46 @@ class PedidoController extends AController implements IController {
             return $this->setResponse($response, $contenido);
         }
     }
+
+    public function obtenerPedidosParaServir($request, $response, $args)
+    {
+        try {
+            $pedidos = $this->miPedidoService->obtenerPedidosParaServir();
+
+            if ($pedidos != null && count($pedidos) > 0) {
+                $contenido = json_encode(array("Pedidos"=>$pedidos));
+            }
+            else {
+                $contenido = json_encode(array("mensaje"=>"No se encontraron pedidos listos para servir"));
+            }
+
+            return $this->setResponse($response, $contenido);
+        } catch (Exception $e) {
+            $contenido = json_encode(array("mensaje"=>"Error al consultar los pedidos listos para servir" . $e->getMessage()));
+
+            return $this->setResponse($response, $contenido);
+        }
+    }
+
+    public function obtenerPedidosFueraDeTiempo($request, $response, $args)
+    {
+        try {
+            $pedidos = $this->miPedidoService->obtenerPedidosFueraDeTiempo();
+
+            if ($pedidos != null && count($pedidos) > 0) {
+                $contenido = json_encode(array("Pedidos"=>$pedidos));
+            }
+            else {
+                $contenido = json_encode(array("mensaje"=>"No se encontraron pedidos fuera de tiempo"));
+            }
+
+            return $this->setResponse($response, $contenido);
+        } catch (Exception $e) {
+            $contenido = json_encode(array("mensaje"=>"Error al consultar los pedidos fuera de tiempo" . $e->getMessage()));
+
+            return $this->setResponse($response, $contenido);
+        }
+    }
 }
 
 ?>

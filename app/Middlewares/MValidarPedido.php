@@ -50,8 +50,8 @@ class MValidarPedido {
         foreach ($this->paramsToValidate as $param) {
             switch ($param) {
                 case 'codigo':
-                    if (empty($data['codigo']) || !is_numeric($data['codigo'])) {
-                        $errors['codigo'] = 'codigo es requerido y debe ser un numero';
+                    if (empty($data['codigo'])) {
+                        $errors['codigo'] = 'codigo es requerido';
                     }
                     break;
                 case 'nombreCliente':

@@ -2,6 +2,7 @@
 
 require_once 'Models/Mesa.php';
 require_once 'Services/AService.php';
+require_once 'Services/PedidoService.php';
 require_once 'Enums/EstadoMesaEnum.php';
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
@@ -69,7 +70,7 @@ class MesaService extends AService {
 
             if ($mesaExistente) {
                 $this->actualizarEstadoMesa($parametros);
-                $mensaje = "Mesa actualizada exitosamente, paso de estado " . $parametros['estadoMesa'] . " a " . $parametros['estadoMesa'];
+                $mensaje = "Mesa actualizada exitosamente, paso de estado " . $mesaExistente->getEstadoMesa() . " a " . $parametros['estadoMesa'];
             } else {
                 $mensaje = "La mesa no existe";
             }
@@ -128,8 +129,86 @@ class MesaService extends AService {
             $actualizacion->bindParam(':estadoMesa', $estadoMesa, PDO::PARAM_INT);
             $actualizacion->bindParam(':codigo', $codigo, PDO::PARAM_INT);
             $actualizacion->execute();
+            
+            if($estadoMesa == EstadoMesaEnum::Comiendo->value){
+                $pedido = $this->obtenerPedidoPorMesa($parametros);
+                
+                if($pedido){
+                $pedidoService = new PedidoService($this->accesoDatos);
+                $param = ['codigo' => $pedido['codigo'], 'estadoPedido' => EstadoPedidoEnum::Entregado->value];
+                $pedidoService->actualizarEstadoPedido($param);
+                }
+            }
+
         } catch (Exception $e) {
             throw new RuntimeException("Error al actualizar el estado de la mesa: " . $e->getMessage());
+        }
+    }
+    
+    
+    public function obtenerPedidoPorMesa($parametros) {
+        try {
+            $codigo = $parametros['codigo'];
+
+            $consulta = $this->accesoDatos->prepararConsulta("
+                SELECT * FROM pedido WHERE idMesa = :codigo AND estadoPedido NOT IN (4, 5)
+            ");
+            $consulta->bindParam(':codigo', $codigo, PDO::PARAM_INT);
+            $consulta->execute();
+            $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+
+            if ($resultado) {
+                return $resultado;
+            } else {
+                return null;
+            }
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al obtener el pedido de la mesa: " . $e->getMessage());
+        }
+    }
+
+    public function agregarFotoMesa($parametros, $imagen) {
+        try {
+            $mesaExistente = $this->obtenerMesaPorCodigo($parametros);
+
+            if ($mesaExistente) {
+                $pedido = $this->obtenerPedidoPorMesa($parametros);
+
+                $nombreFoto = "mesa_" . $parametros['codigo'] . "_Pedido_" . $pedido['codigo'];
+                AService::cargarFoto($imagen['imagen'], $nombreFoto, 'Imagenes/FotoMesa');
+
+                $mensaje = "Foto de la mesa subida exitosamente";
+            } else {
+                $mensaje = "La mesa no existe";
+            }
+
+            return $mensaje;
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al agregar la foto de la mesa: " . $e->getMessage());
+        }
+    }
+
+    public function obtenerMesaMasUsada()
+    {
+        try {
+            $consulta = $this->accesoDatos->prepararConsulta("
+                SELECT idMesa, COUNT(idMesa) as cantidad
+                FROM pedido
+                GROUP BY idMesa
+                ORDER BY cantidad DESC
+                LIMIT 1
+            ");
+            $consulta->execute();
+            $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+
+            if ($resultado) {
+                $mesa = $this->obtenerMesaPorCodigo(['codigo' => $resultado['idMesa']]);
+                return $mesa;
+            } else {
+                return null;
+            }
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al obtener la mesa mas usada: " . $e->getMessage());
         }
     }
 }
